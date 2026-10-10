@@ -5,13 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Redirecting...</title>
     <script>
-        // Redirects immediately to the root of the current domain
-        window.location.replace(window.location.origin + '/');
+        // Extract the repository name from the path (e.g., "/reponame/subpage" -> "reponame")
+        const pathSegments = window.location.pathname.split('/').filter(Boolean);
+        const repoRoot = pathSegments.length > 0 ? '/' + pathSegments[0] + '/' : '/';
+        
+        // Redirect to the repo root
+        window.location.replace(window.location.origin + repoRoot);
     </script>
 </head>
 <body>
     <noscript>
-        <p>JavaScript is disabled. Please <a href="/">click here to return to the home page</a>.</p>
+        <p>JavaScript is disabled. <a id="fallback-link" href="./">Click here to return to the repository root</a>.</p>
     </noscript>
 </body>
 </html>
