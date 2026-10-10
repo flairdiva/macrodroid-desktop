@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>405 Method Not Allowed - Site Maintenance</title>
+    <!-- Loading Google Font Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            color-scheme: light;
+            --bg-color: #f3f5f7;
+            --panel-bg: #ffffff;
+            --border-color: #dce2e8;
+            --text-color: #1c2733;
+            --muted-color: #687583;
+            --accent-color: #245b78;
+            --accent-trigger: #3478a5;
+            --accent-action: #398365;
+            --accent-constraint: #c18426;
+            --shadow: 0 2px 8px rgba(28, 39, 51, 0.05);
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: Inter, "Segoe UI", system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            min-height: 76px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 24px;
+            padding: 12px 28px;
+            background: var(--panel-bg);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 1px 3px rgba(28, 39, 51, 0.04);
+            z-index: 1;
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 220px;
+        }
+        .brand-mark {
+            width: 38px;
+            height: 38px;
+            display: grid;
+            place-items: center;
+            border-radius: 9px;
+            background: #e8f0f4;
+            color: var(--accent-color);
+            padding: 3px;
+            object-fit: contain;
+            font-weight: 700;
+        }
+        .brand h1 { margin: 0; font-size: 1rem; letter-spacing: -0.02em; }
+        .brand p { margin: 3px 0 0; color: var(--muted-color); font-size: 0.75rem; }
+        
+        .main-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+            padding: 24px;
+        }
+        .maintenance-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 620px;
+            padding: 40px 36px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            text-align: center;
+        }
+        .error-badge-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: -8px;
+        }
+        .draft-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            color: #536270;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: #f8efdf;
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid #f2dfc2;
+        }
+        .draft-status::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-constraint);
+            box-shadow: 0 0 0 3px #fcedd8;
+        }
+        .error-code {
+            font-size: 5rem;
+            font-weight: 800;
+            line-height: 1;
+            color: var(--accent-color);
+            letter-spacing: -0.04em;
+            margin: 0;
+        }
+        .maintenance-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin: 0;
+            color: var(--text-color);
+        }
+        .maintenance-description {
+            color: var(--muted-color);
+            font-size: 0.92rem;
+            line-height: 1.6;
+            margin: 0 auto;
+            max-width: 480px;
+        }
+        .info-panel {
+            background: #fafbfc;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            text-align: left;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.82rem;
+        }
+        .info-label {
+            color: var(--muted-color);
+            font-weight: 600;
+        }
+        .info-value {
+            color: var(--text-color);
+            font-weight: 700;
+            font-family: Consolas, monospace;
+            background: #edf4f7;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        .actions-row {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 8px;
+        }
+        .btn {
+            padding: 11px 20px;
+            font: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 120ms ease, box-shadow 120ms ease, transform 100ms ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-primary {
+            background: var(--accent-color);
+            color: white;
+            border: 1px solid var(--accent-color);
+        }
+        .btn-primary:hover {
+            background: #19465f;
+            box-shadow: 0 2px 6px rgba(36, 91, 120, 0.25);
+        }
+        .btn-secondary {
+            background: #fff;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+        .btn-secondary:hover {
+            background: #f4f6f7;
+            border-color: #bcc7cf;
+        }
+        footer {
+            padding: 16px 28px;
+            text-align: center;
+            color: var(--muted-color);
+            font-size: 0.75rem;
+            border-top: 1px solid var(--border-color);
+            background: var(--panel-bg);
+        }
+        @media (max-width: 600px) {
+            .maintenance-card { padding: 24px 18px; }
+            .error-code { font-size: 4rem; }
+            .actions-row { flex-direction: column; }
+            .btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <main class="main-container">
+        <div class="maintenance-card">
+            <div class="error-badge-wrapper">
+                <span class="draft-status">HTTP 405 Method Not Allowed</span>
+            </div>
+            
+            <h2 class="error-code">405</h2>
+            
+            <div>
+                <h3 class="maintenance-title">Updating index.html</h3>
+                <p class="maintenance-description">
+                    The requested HTTP method is blocked because our core portal is undergoing scheduled maintenance and updates to <strong>index.html</strong>. Regular service will be restored shortly.
+                </p>
+            </div>
+
+            <div class="info-panel">
+                <div class="info-row">
+                    <span class="info-label">Reason</span>
+                    <span style="color: var(--accent-constraint); font-weight: 700;">Updating index.html</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Target Resource</span>
+                    <span class="info-value">/index.html</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Estimated Restoration</span>
+                    <span class="info-value" id="estTime">~15 Minutes</span>
+                </div>
+            </div>
+
+            <div class="actions-row">
+                <button class="btn btn-primary" onclick="window.location.reload();">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.73-5.73"/></svg>
+                    Retry Connection
+                </button>
+                <a href="mailto:support@example.com" class="btn btn-secondary">
+                    Contact Administrator
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2026 System Core Services. All rights reserved. Secure Maintenance Gateway.
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("405 Maintenance page loaded successfully for index.html update (topbar removed).");
+        });
+    </script>
+</body>
+</html>
