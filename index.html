@@ -110,6 +110,8 @@
         .macro-enabled span { display: flex; flex-direction: column; gap: 3px; }
         .macro-enabled small { color: var(--muted-color); font-size: 0.72rem; font-weight: 400; line-height: 1.4; }
         .sidebar-export { width: 100%; padding: 11px 14px; }
+        .sidebar-import { width: 100%; padding: 11px 14px; color: var(--accent-color); background: #fff; border-color: var(--border-color); }
+        .sidebar-import:hover { background: #f5f7f8; box-shadow: 0 2px 5px rgba(28, 39, 51, 0.08); }
         .workspace { padding: 22px 24px; display: flex; flex-direction: column; min-width: 0; }
         .workspace-intro {
             display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;
@@ -371,11 +373,13 @@
         .scene-editor-header h2 { margin: 0; font-size: 1rem; }
         .scene-editor-header p { margin: 4px 0 0; color: var(--muted-color); font-size: 0.78rem; }
         .scene-editor-body {
-            min-height: 0; flex: 1; display: grid; grid-template-columns: 270px minmax(280px, 1fr) 300px;
-            gap: 16px; padding: 18px; overflow: auto;
+            min-height: 0; flex: 1; display: grid;
+            grid-template-columns: 270px minmax(280px, 1fr) 300px;
+            grid-template-rows: minmax(0, 1fr); gap: 16px; padding: 18px; overflow: hidden;
         }
         .scene-settings, .scene-canvas-panel, .scene-components {
-            min-width: 0; background: #fff; border: 1px solid var(--border-color);
+            min-width: 0; min-height: 0; overflow-y: auto;
+            background: #fff; border: 1px solid var(--border-color);
             border-radius: 8px; padding: 15px;
         }
         .scene-panel-title {
@@ -388,6 +392,11 @@
             color: #596875; font-size: 0.72rem; font-weight: 700;
         }
         .scene-field input[type="text"], .scene-field input[type="number"] {
+            width: 100%; min-width: 0; padding: 8px 9px;
+            border: 1px solid var(--border-color); border-radius: 5px;
+            color: var(--text-color); background: #fff; font: inherit; font-size: 0.82rem;
+        }
+        .scene-field select {
             width: 100%; min-width: 0; padding: 8px 9px;
             border: 1px solid var(--border-color); border-radius: 5px;
             color: var(--text-color); background: #fff; font: inherit; font-size: 0.82rem;
@@ -411,6 +420,32 @@
         .scene-field input[type="checkbox"] { accent-color: #245b78; }
         .scene-check-row { display: flex; align-items: center; gap: 8px; margin: 5px 0 14px; }
         .scene-check-row label { color: #596875; font-size: 0.76rem; font-weight: 600; }
+        .scene-settings-group {
+            margin: 15px 0; padding-top: 13px; border-top: 1px solid #e8ecef;
+        }
+        .scene-settings-group h4 {
+            margin: 0 0 11px; color: #45535f; font-size: 0.73rem;
+            letter-spacing: 0.04em; text-transform: uppercase;
+        }
+        .scene-range-row {
+            display: flex; align-items: center; gap: 8px; margin: 0 0 13px;
+        }
+        .scene-range-row label {
+            flex: 1; color: #596875; font-size: 0.72rem; font-weight: 700;
+        }
+        .scene-range-row input { flex: 1; min-width: 50px; accent-color: #245b78; }
+        .scene-range-row output {
+            min-width: 38px; color: #596875; text-align: right;
+            font-size: 0.72rem; font-weight: 700; font-variant-numeric: tabular-nums;
+        }
+        .scene-settings-note { margin: 4px 0 12px; color: #75818b; font-size: 0.68rem; line-height: 1.45; }
+        .scene-dimension-row { display: flex; align-items: flex-end; gap: 8px; }
+        .scene-dimension-row .scene-field { flex: 1; min-width: 0; }
+        .scene-dimension-value {
+            width: 74px; margin-bottom: 13px; padding: 8px 7px;
+            border: 1px solid var(--border-color); border-radius: 5px;
+            color: var(--text-color); background: #fff; font: inherit; font-size: 0.78rem;
+        }
         .scene-canvas-panel { display: flex; flex-direction: column; align-items: center; background: #eef1f3; }
         .scene-canvas-caption { align-self: stretch; margin: 0 0 12px; color: #64717d; font-size: 0.72rem; font-weight: 700; }
         .scene-device {
@@ -483,8 +518,14 @@
             .main-container { grid-template-columns: 270px minmax(0, 1fr); gap: 14px; padding: 16px 18px 20px; }
             .workspace { padding: 18px; }
             .workflow-hint { display: none; }
-            .scene-editor-body { grid-template-columns: 240px minmax(250px, 1fr); }
+            .scene-editor-body {
+                grid-template-columns: 240px minmax(250px, 1fr);
+                grid-template-rows: auto auto; overflow: auto;
+            }
             .scene-components { grid-column: 1 / -1; }
+            .scene-settings, .scene-canvas-panel, .scene-components {
+                min-height: auto; overflow: visible;
+            }
             .scene-component-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
         @media (max-width: 680px) {
@@ -504,7 +545,10 @@
             .block-actions button { padding: 5px 6px; }
             .scene-editor-overlay { padding: 8px; }
             .scene-editor { height: 100%; }
-            .scene-editor-body { grid-template-columns: minmax(0, 1fr); padding: 10px; gap: 10px; }
+            .scene-editor-body {
+                grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto auto;
+                padding: 10px; gap: 10px;
+            }
             .scene-canvas-panel { min-height: 470px; }
             .scene-components { grid-column: auto; }
             .scene-component-list { display: flex; }
@@ -552,7 +596,7 @@
         <aside class="sidebar" aria-label="Macro settings">
             <div class="sidebar-heading">
                 <h2>Macro settings</h2>
-                <p>Set the macro details and export your automation.</p>
+                <p>Set the macro details, then import or export your automation.</p>
             </div>
             <div class="macro-settings">
                 <label class="macro-field" for="macroName">
@@ -567,6 +611,8 @@
                     <input type="checkbox" id="macroEnabled" checked>
                     <span>Enable macro<small>Disabled macros are included in the export but will not run.</small></span>
                 </label>
+                <button class="export-btn sidebar-import" type="button" onclick="document.getElementById('macroImportFile').click()">Import .macro</button>
+                <input id="macroImportFile" type="file" accept=".macro,.json,application/json" hidden onchange="importMacro(this)">
                 <button class="export-btn sidebar-export" type="button" onclick="exportMacro()">Export .macro</button>
             </div>
         </aside>
@@ -649,6 +695,117 @@
                         <input type="text" id="sceneName" value="Scene 1" oninput="updateSceneSetting('name', this.value)">
                     </label>
                     <label class="scene-field">
+                        <span>Display mode</span>
+                        <select id="sceneDisplayMode" onchange="updateSceneDisplayMode(this.value)">
+                            <option value="Activity">Full screen (Activity)</option>
+                            <option value="Dialog">Dialog</option>
+                            <option value="Overlay">Overlay</option>
+                        </select>
+                    </label>
+                    <div class="scene-settings-group">
+                        <h4>Scene size and position</h4>
+                        <div class="scene-dimension-row">
+                            <label class="scene-field">
+                                <span>Width</span>
+                                <select id="sceneWidthOption" onchange="updateSceneDimension('width', this.value)">
+                                    <option value="FILL_SCREEN">Fill screen</option>
+                                    <option value="PERCENT">Custom percentage</option>
+                                </select>
+                            </label>
+                            <input class="scene-dimension-value" type="number" id="sceneWidthValue" min="1" max="100" value="100" aria-label="Scene width percentage" oninput="updateSceneDisplayOption('widthValue', Number(this.value))">
+                        </div>
+                        <div class="scene-dimension-row">
+                            <label class="scene-field">
+                                <span>Height</span>
+                                <select id="sceneHeightOption" onchange="updateSceneDimension('height', this.value)">
+                                    <option value="FILL_SCREEN">Fill screen</option>
+                                    <option value="PERCENT">Custom percentage</option>
+                                </select>
+                            </label>
+                            <input class="scene-dimension-value" type="number" id="sceneHeightValue" min="1" max="100" value="100" aria-label="Scene height percentage" oninput="updateSceneDisplayOption('heightValue', Number(this.value))">
+                        </div>
+                        <div class="scene-dimension-row">
+                            <label class="scene-field">
+                                <span>X position (%)</span>
+                                <input type="number" id="sceneXValue" min="0" max="100" value="50" oninput="updateSceneDisplayOption('xValue', Number(this.value))">
+                            </label>
+                            <label class="scene-field">
+                                <span>Y position (%)</span>
+                                <input type="number" id="sceneYValue" min="0" max="100" value="50" oninput="updateSceneDisplayOption('yValue', Number(this.value))">
+                            </label>
+                        </div>
+                    </div>
+                    <div id="sceneActivityOptions" class="scene-settings-group" hidden>
+                        <h4>Full screen options</h4>
+                        <div class="scene-check-row">
+                            <input type="checkbox" id="sceneActivityLock" onchange="updateSceneDisplayOption('showOnLockScreen', this.checked)">
+                            <label for="sceneActivityLock">Show on lock screen</label>
+                        </div>
+                        <div class="scene-check-row">
+                            <input type="checkbox" id="sceneActivityBack" onchange="updateSceneDisplayOption('dismissOnBackPress', this.checked)">
+                            <label for="sceneActivityBack">Close on back press / swipe</label>
+                        </div>
+                        <div class="scene-check-row">
+                            <input type="checkbox" id="sceneActivityHome" onchange="updateSceneDisplayOption('dismissOnHomeTaskSwitch', this.checked)">
+                            <label for="sceneActivityHome">Close on home / task switch</label>
+                        </div>
+                        <div class="scene-check-row">
+                            <input type="checkbox" id="sceneActivityBackground" onchange="updateSceneDisplayOption('closeOnBackgroundTouch', this.checked)">
+                            <label for="sceneActivityBackground">Close on background non-interactive press</label>
+                        </div>
+                    </div>
+                    <div id="sceneDialogOptions" class="scene-settings-group" hidden>
+                        <h4>Dialog options</h4>
+                        <div class="scene-check-row">
+                            <input type="checkbox" id="sceneDialogLock" onchange="updateSceneDisplayOption('showOnLockScreen', this.checked)">
+                            <label for="sceneDialogLock">Show on lock screen</label>
+                        </div>
+                        <div class="scene-check-row">
+                            <input type="checkbox" id="sceneDialogBack" onchange="updateSceneDisplayOption('dismissOnBackPress', this.checked)">
+                            <label for="sceneDialogBack">Close on back press / swipe</label>
+                        </div>
+                        <div class="scene-check-row">
+                            <input type="checkbox" id="sceneDialogHome" onchange="updateSceneDisplayOption('dismissOnHomeTaskSwitch', this.checked)">
+                            <label for="sceneDialogHome">Close on home / task switch</label>
+                        </div>
+                        <div class="scene-check-row">
+                            <input type="checkbox" id="sceneDialogOutside" onchange="updateSceneDisplayOption('closeOnOutsideTouch', this.checked)">
+                            <label for="sceneDialogOutside">Close on tap outside</label>
+                        </div>
+                        <div class="scene-check-row">
+                            <input type="checkbox" id="sceneDialogBackground" onchange="updateSceneDisplayOption('closeOnBackgroundTouch', this.checked)">
+                            <label for="sceneDialogBackground">Close on background non-interactive press</label>
+                        </div>
+                    </div>
+                    <div id="sceneOverlayOptions" class="scene-settings-group" hidden>
+                        <h4>Overlay options</h4>
+                        <div class="scene-check-row">
+                            <input type="checkbox" id="sceneOverlayBackground" onchange="updateSceneDisplayOption('closeOnBackgroundTouch', this.checked)">
+                            <label for="sceneOverlayBackground">Close on background non-interactive press</label>
+                        </div>
+                        <div class="scene-check-row">
+                            <input type="checkbox" id="sceneOverlayStatusBar" onchange="updateSceneDisplayOption('overlayStatusBar', this.checked)">
+                            <label for="sceneOverlayStatusBar">Overlay status bar</label>
+                        </div>
+                        <div class="scene-check-row">
+                            <input type="checkbox" id="sceneLongPressMove" onchange="updateSceneDisplayOption('longPressToMove', this.checked)">
+                            <label for="sceneLongPressMove">Long press to move</label>
+                        </div>
+                        <div class="scene-check-row">
+                            <input type="checkbox" id="scenePreventBin" onchange="updateSceneDisplayOption('preventRemovalByBin', this.checked)">
+                            <label for="scenePreventBin">Prevent removal by dragging to bin</label>
+                        </div>
+                        <div class="scene-check-row">
+                            <input type="checkbox" id="sceneDrawSystemApps" onchange="updateSceneDisplayOption('drawOverSystemApps', this.checked)">
+                            <label for="sceneDrawSystemApps">Draw over lock screen / system apps</label>
+                        </div>
+                        <div class="scene-check-row">
+                            <input type="checkbox" id="sceneShowPosition" onchange="updateSceneDisplayOption('showPositionOnMove', this.checked)">
+                            <label for="sceneShowPosition">Show popup X,Y location on move</label>
+                        </div>
+                        <p class="scene-settings-note">Overlaying other apps needs the display-over-other-apps permission. Drawing over system apps also needs MacroDroid accessibility service.</p>
+                    </div>
+                    <label class="scene-field">
                         <span>Background colour</span>
                         <input type="color" id="sceneBackground" value="#ffffff" oninput="updateSceneColor('backgroundColor', this.value)">
                     </label>
@@ -666,7 +823,27 @@
                         <input type="checkbox" id="sceneBlockNext" onchange="updateSceneSetting('blockNextActions', this.checked)">
                         <label for="sceneBlockNext">Wait until the scene is closed</label>
                     </div>
-                    <p class="scene-editor-note">Private scenes are embedded in the action and use Full Screen (Activity). Shared-scene IDs are not generated.</p>
+                    <div class="scene-settings-group">
+                        <h4>Layout</h4>
+                        <div class="scene-range-row">
+                            <label for="sceneCornerRadius">Rounded corners</label>
+                            <input type="range" id="sceneCornerRadius" min="0" max="32" value="0" oninput="updateSceneRangeSetting('roundedCornerAmount', this.value, 'dp')">
+                            <output id="sceneCornerRadiusValue">0 dp</output>
+                        </div>
+                        <div class="scene-range-row">
+                            <label for="sceneContentPadding">Content padding</label>
+                            <input type="range" id="sceneContentPadding" min="0" max="32" value="8" oninput="updateSceneRangeSetting('contentPadding', this.value, 'dp')">
+                            <output id="sceneContentPaddingValue">8 dp</output>
+                        </div>
+                    </div>
+                    <label class="scene-field">
+                        <span>When to update variables</span>
+                        <select id="sceneVariableUpdate" onchange="updateSceneSetting('updateValuesOnSceneClose', this.value === 'onClose')">
+                            <option value="immediately">As soon as changed</option>
+                            <option value="onClose">When the scene closes</option>
+                        </select>
+                    </label>
+                    <p class="scene-editor-note">Private scenes are embedded in this action. Unrecognized scene settings are retained when editing.</p>
                 </section>
                 <section class="scene-canvas-panel">
                     <p class="scene-canvas-caption">SCENE PREVIEW - DEVICE CANVAS</p>
@@ -790,15 +967,31 @@
             { classType: 'TakeScreenshotAction', name: 'Take Screenshot', defaults: { m_option: 0 } },
             { classType: 'TakePictureAction', name: 'Take Picture', defaults: {} },
             { classType: 'CustomSceneAction', name: 'Display Custom Scene', defaults: {
+                sceneVariableBindings: {},
+                sharedSceneGuid: 0,
+                sharedSceneName: '',
                 sceneDescription: {
                     sceneConfig: {
                         name: 'Scene 1',
                         blockNextActions: false,
                         foregroundColor: -16777216,
-                        backgroundColor: -1
+                        backgroundColor: -1,
+                        backgroundImageDisplayMode: 'CENTER_CROP',
+                        displayOption: { type: 'Activity' },
+                        showOnLockScreen: false,
+                        dismissOnBackPress: false,
+                        dismissOnHomeTaskSwitch: false,
+                        closeOnBackgroundTouch: false,
+                        roundedCornerAmount: 0,
+                        contentPadding: 8,
+                        updateValuesOnSceneClose: false
                     },
                     itemList: { items: [] }
-                }
+                },
+                disableLogging: false,
+                m_constraintList: [],
+                m_isDisabled: false,
+                m_isOrCondition: false
             } },
             // Expanded Batch 2
             { classType: 'SetRingerModeAction', name: 'Set Ringer Mode', defaults: { m_ringerMode: 0 } },
@@ -2116,12 +2309,178 @@
             scene: JSON.parse(JSON.stringify(block.params.sceneDescription))
         };
         const sceneConfig = currentSceneEdit.scene.sceneConfig;
+        normalizeSceneConfig(sceneConfig);
+        if (!sceneConfig.displayOption || typeof sceneConfig.displayOption !== 'object') {
+            sceneConfig.displayOption = { type: 'Activity' };
+        } else if (!sceneConfig.displayOption.type) {
+            sceneConfig.displayOption.type = 'Activity';
+        }
         document.getElementById('sceneName').value = sceneConfig.name || 'Scene 1';
         updateSceneBackgroundControls(sceneConfig.backgroundColor ?? -1);
         document.getElementById('sceneForeground').value = argbToHex(sceneConfig.foregroundColor ?? -16777216);
         document.getElementById('sceneBlockNext').checked = sceneConfig.blockNextActions === true;
+        updateSceneDisplayControls(sceneConfig);
         renderSceneEditor();
         document.getElementById('sceneEditorOverlay').style.display = 'flex';
+    }
+
+    function normalizeSceneConfig(sceneConfig) {
+        const option = sceneConfig.displayOption && typeof sceneConfig.displayOption === 'object'
+            ? sceneConfig.displayOption
+            : {};
+        const moveLegacyOption = (legacyKey, target, targetKey) => {
+            if (Object.prototype.hasOwnProperty.call(option, legacyKey)) {
+                if (!Object.prototype.hasOwnProperty.call(target, targetKey)) {
+                    target[targetKey] = option[legacyKey];
+                }
+                delete option[legacyKey];
+            }
+        };
+        [
+            ['showOnLockScreen', sceneConfig, 'showOnLockScreen'],
+            ['closeSceneOnBackPress', sceneConfig, 'dismissOnBackPress'],
+            ['closeSceneOnHomeOrTaskSwitch', sceneConfig, 'dismissOnHomeTaskSwitch'],
+            ['closeSceneOnBackgroundPress', sceneConfig, 'closeOnBackgroundTouch'],
+            ['closeSceneOnTapOutside', option, 'closeOnOutsideTouch']
+        ].forEach(([legacyKey, target, targetKey]) => moveLegacyOption(legacyKey, target, targetKey));
+        if (option.displayMode !== undefined) {
+            const modeAliases = {
+                SHOW_ACTIVITY: 'Activity',
+                ACTIVITY: 'Activity',
+                FULL_SCREEN: 'Activity',
+                SHOW_DIALOG: 'Dialog',
+                DIALOG: 'Dialog',
+                SHOW_OVERLAY: 'Overlay',
+                OVERLAY: 'Overlay'
+            };
+            const rawMode = String(option.displayMode).toUpperCase();
+            option.type = modeAliases[rawMode] || option.displayMode;
+            delete option.displayMode;
+        }
+        if (sceneConfig.cornerRadius !== undefined) {
+            if (sceneConfig.roundedCornerAmount === undefined) {
+                sceneConfig.roundedCornerAmount = sceneConfig.cornerRadius;
+            }
+            delete sceneConfig.cornerRadius;
+        }
+        if (sceneConfig.updateVariablesOnSceneClose !== undefined) {
+            if (sceneConfig.updateValuesOnSceneClose === undefined) {
+                sceneConfig.updateValuesOnSceneClose = sceneConfig.updateVariablesOnSceneClose;
+            }
+            delete sceneConfig.updateVariablesOnSceneClose;
+        }
+        if (Object.keys(option).length) sceneConfig.displayOption = option;
+    }
+
+    function updateSceneDisplayControls(sceneConfig) {
+        const option = sceneConfig.displayOption && typeof sceneConfig.displayOption === 'object'
+            ? sceneConfig.displayOption
+            : {};
+        const rawMode = option.type ?? 'Activity';
+        const modeSelect = document.getElementById('sceneDisplayMode');
+        modeSelect.value = Array.from(modeSelect.options).some(item => item.value === rawMode)
+            ? rawMode
+            : 'Activity';
+        document.getElementById('sceneActivityOptions').hidden = modeSelect.value !== 'Activity';
+        document.getElementById('sceneDialogOptions').hidden = modeSelect.value !== 'Dialog';
+        document.getElementById('sceneOverlayOptions').hidden = modeSelect.value !== 'Overlay';
+        [
+            ['sceneActivityLock', sceneConfig, 'showOnLockScreen'],
+            ['sceneDialogLock', sceneConfig, 'showOnLockScreen'],
+            ['sceneActivityBack', sceneConfig, 'dismissOnBackPress'],
+            ['sceneDialogBack', sceneConfig, 'dismissOnBackPress'],
+            ['sceneActivityHome', sceneConfig, 'dismissOnHomeTaskSwitch'],
+            ['sceneDialogHome', sceneConfig, 'dismissOnHomeTaskSwitch'],
+            ['sceneDialogOutside', option, 'closeOnOutsideTouch'],
+            ['sceneActivityBackground', sceneConfig, 'closeOnBackgroundTouch'],
+            ['sceneDialogBackground', sceneConfig, 'closeOnBackgroundTouch'],
+            ['sceneOverlayBackground', sceneConfig, 'closeOnBackgroundTouch'],
+            ['sceneOverlayStatusBar', option, 'overlayStatusBar'],
+            ['sceneLongPressMove', option, 'longPressToMove'],
+            ['scenePreventBin', option, 'preventRemovalByBin'],
+            ['sceneDrawSystemApps', option, 'drawOverSystemApps'],
+            ['sceneShowPosition', option, 'showPositionOnMove']
+        ].forEach(([id, source, key]) => {
+            document.getElementById(id).checked = source[key] === true;
+        });
+        ['width', 'height'].forEach(axis => {
+            const raw = option[`${axis}Option`];
+            const choice = raw === 'PERCENT' || raw === 1 || raw === '1'
+                ? 'PERCENT'
+                : 'FILL_SCREEN';
+            const select = document.getElementById(`scene${axis[0].toUpperCase()}${axis.slice(1)}Option`);
+            const valueInput = document.getElementById(`scene${axis[0].toUpperCase()}${axis.slice(1)}Value`);
+            select.value = choice;
+            valueInput.value = option[`${axis}Value`] ?? 100;
+            valueInput.disabled = choice === 'FILL_SCREEN';
+        });
+        document.getElementById('sceneXValue').value = option.xValue ?? 50;
+        document.getElementById('sceneYValue').value = option.yValue ?? 50;
+        const cornerRadius = sceneConfig.roundedCornerAmount ?? 0;
+        const contentPadding = sceneConfig.contentPadding ?? 8;
+        document.getElementById('sceneCornerRadius').value = cornerRadius;
+        document.getElementById('sceneCornerRadiusValue').value = `${cornerRadius} dp`;
+        document.getElementById('sceneContentPadding').value = contentPadding;
+        document.getElementById('sceneContentPaddingValue').value = `${contentPadding} dp`;
+        document.getElementById('sceneVariableUpdate').value =
+            sceneConfig.updateValuesOnSceneClose === true ? 'onClose' : 'immediately';
+    }
+
+    function updateSceneDisplayMode(mode) {
+        if (!currentSceneEdit) return;
+        const config = currentSceneEdit.scene.sceneConfig;
+        if (!config.displayOption || typeof config.displayOption !== 'object') config.displayOption = {};
+        if (config.displayOption.type !== mode) {
+            if (mode === 'Dialog') {
+                config.displayOption.nameRes ??= 2132022541;
+            } else {
+                delete config.displayOption.nameRes;
+            }
+        }
+        config.displayOption.type = mode;
+        updateSceneDisplayControls(config);
+        renderScenePreview();
+    }
+
+    function updateSceneDisplayOption(key, value) {
+        if (!currentSceneEdit || (typeof value === 'number' && !Number.isFinite(value))) return;
+        if (key === 'widthValue' || key === 'heightValue') value = Math.min(100, Math.max(1, value));
+        if (key === 'xValue' || key === 'yValue') value = Math.min(100, Math.max(0, value));
+        const config = currentSceneEdit.scene.sceneConfig;
+        const sceneConfigKeys = new Set([
+            'showOnLockScreen',
+            'dismissOnBackPress',
+            'dismissOnHomeTaskSwitch',
+            'closeOnBackgroundTouch'
+        ]);
+        if (sceneConfigKeys.has(key)) {
+            config[key] = value;
+        } else {
+            if (!config.displayOption || typeof config.displayOption !== 'object') config.displayOption = {};
+            config.displayOption[key] = value;
+        }
+        const inputIds = { widthValue: 'sceneWidthValue', heightValue: 'sceneHeightValue', xValue: 'sceneXValue', yValue: 'sceneYValue' };
+        if (inputIds[key]) document.getElementById(inputIds[key]).value = value;
+        renderScenePreview();
+    }
+
+    function updateSceneDimension(axis, optionValue) {
+        if (!currentSceneEdit) return;
+        updateSceneDisplayOption(`${axis}Option`, optionValue);
+        const inputId = `scene${axis[0].toUpperCase()}${axis.slice(1)}Value`;
+        document.getElementById(inputId).disabled = optionValue === 'FILL_SCREEN';
+    }
+
+    function updateSceneRangeSetting(key, value, unit) {
+        if (!currentSceneEdit) return;
+        const number = Number(value);
+        currentSceneEdit.scene.sceneConfig[key] = number;
+        const outputIds = {
+            roundedCornerAmount: 'sceneCornerRadiusValue',
+            contentPadding: 'sceneContentPaddingValue'
+        };
+        document.getElementById(outputIds[key]).value = `${number} ${unit}`;
+        renderScenePreview();
     }
 
     function closeSceneEditor() {
@@ -2346,6 +2705,8 @@
         const preview = document.getElementById('scenePreview');
         preview.innerHTML = '';
         preview.style.backgroundColor = argbToRgba(config.backgroundColor ?? -1);
+        preview.style.borderRadius = `${Number(config.roundedCornerAmount) || 0}px`;
+        preview.style.padding = `${Number(config.contentPadding ?? 8)}px`;
         const items = currentSceneEdit.scene.itemList.items;
         if (items.length === 0) {
             const empty = document.createElement('div');
@@ -2488,7 +2849,12 @@
 
                 const infoDiv = document.createElement('div');
                 infoDiv.className = 'block-info';
-                infoDiv.innerHTML = `<span>${b.name} (${b.m_classType})</span><span class="block-detail">${getSummary(b)}</span>`;
+                const name = document.createElement('span');
+                name.textContent = `${b.name} (${b.m_classType})`;
+                const detail = document.createElement('span');
+                detail.className = 'block-detail';
+                detail.textContent = getSummary(b);
+                infoDiv.append(name, detail);
 
                 const actionsDiv = document.createElement('div');
                 actionsDiv.className = 'block-actions';
@@ -2551,6 +2917,72 @@
         document.body.appendChild(downloadAnchor);
         downloadAnchor.click();
         downloadAnchor.remove();
+    }
+
+    function importedBlocks(list, section) {
+        if (!Array.isArray(list)) {
+            throw new Error(`The macro's ${section} list is missing or invalid.`);
+        }
+
+        return list.map((item, index) => {
+            if (!item || typeof item !== 'object' || Array.isArray(item) ||
+                typeof item.m_classType !== 'string' || !item.m_classType) {
+                throw new Error(`The ${section} at position ${index + 1} is invalid.`);
+            }
+
+            const { m_classType, m_SIGUID, ...params } = item;
+            const catalogItem = masterCatalogs[section].find(entry => entry.classType === m_classType);
+            return {
+                section,
+                m_classType,
+                name: catalogItem?.name || m_classType,
+                schemaDriven: catalogItem?.schemaDriven || false,
+                m_SIGUID: Number.isFinite(m_SIGUID) ? m_SIGUID : Math.floor(Math.random() * 9000000000000000000) + 1000000000000000000,
+                params
+            };
+        });
+    }
+
+    async function importMacro(fileInput) {
+        const file = fileInput.files[0];
+        if (!file) return;
+
+        try {
+            const imported = JSON.parse(await file.text());
+            const macro = imported?.macro;
+            if (!macro || typeof macro !== 'object' || Array.isArray(macro)) {
+                throw new Error('This file does not contain a valid macro.');
+            }
+            if (macro.m_name !== undefined && typeof macro.m_name !== 'string') {
+                throw new Error('The macro name must be text.');
+            }
+            if (macro.m_description !== undefined && typeof macro.m_description !== 'string') {
+                throw new Error('The macro description must be text.');
+            }
+            if (macro.m_enabled !== undefined && typeof macro.m_enabled !== 'boolean') {
+                throw new Error('The macro enabled setting must be true or false.');
+            }
+
+            const importedTriggers = importedBlocks(macro.m_triggerList, 'trigger');
+            const importedConstraints = importedBlocks(macro.m_constraintList, 'constraint');
+            const importedActions = importedBlocks(macro.m_actionList, 'action');
+            const macroName = macro.m_name || 'Massive Macro';
+
+            if (!confirm(`Import "${macroName}" and replace the macro currently in the editor?`)) return;
+
+            macroState.triggers = importedTriggers;
+            macroState.constraints = importedConstraints;
+            macroState.actions = importedActions;
+            document.getElementById('macroName').value = macroName;
+            document.getElementById('macroDescription').value = macro.m_description || '';
+            document.getElementById('macroEnabled').checked = macro.m_enabled ?? true;
+            renderWorkspace();
+            alert(`Imported "${macroName}".`);
+        } catch (error) {
+            alert(`Unable to import this macro: ${error.message}`);
+        } finally {
+            fileInput.value = '';
+        }
     }
 
     window.onload = initCatalogs;
