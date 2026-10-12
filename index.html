@@ -76,20 +76,99 @@
             border-color: var(--accent-trigger);
         }
         .main-container {
-            display: grid; grid-template-columns: 310px minmax(0, 1fr); gap: 20px;
+            display: grid; grid-template-columns: minmax(220px, 280px) minmax(0, 1fr) minmax(240px, 300px); gap: 20px;
             flex: 1; min-height: 0; padding: 22px 28px 28px;
         }
-        .sidebar, .workspace {
+        .sidebar, .workspace, .settings-panel {
             background: var(--panel-bg); border: 1px solid var(--border-color);
             border-radius: 9px; box-shadow: var(--shadow);
         }
         .sidebar {
             padding: 18px; display: flex; flex-direction: column;
-            overflow-y: auto; min-height: 0;
+            overflow: hidden; min-height: 0;
         }
         .sidebar-heading { margin-bottom: 18px; }
         .sidebar-heading h2 { margin: 0; font-size: 1rem; }
         .sidebar-heading p { margin: 5px 0 0; color: var(--muted-color); font-size: 0.78rem; line-height: 1.45; }
+        .explorer-panel { min-height: 0; }
+        .file-explorer { display: flex; flex: 1; min-height: 0; flex-direction: column; margin: 0; }
+        .file-explorer-header {
+            display: flex; align-items: center; justify-content: space-between; gap: 8px;
+            margin-bottom: 9px; flex-wrap: wrap;
+        }
+        .file-explorer-header h3 { margin: 0; font-size: 0.92rem; }
+        .file-explorer-actions { display: flex; align-items: center; gap: 6px; }
+        .file-explorer-open {
+            padding: 5px 8px; border: 1px solid var(--border-color); border-radius: 5px;
+            color: var(--accent-color); background: #fff; cursor: pointer; font: inherit;
+            font-size: 0.7rem; font-weight: 700;
+        }
+        .file-explorer-new { position: relative; }
+        .file-explorer-new summary {
+            list-style: none; padding: 5px 9px; border: 1px solid #cfe0e8; border-radius: 5px;
+            color: #286c4e; background: #f4faf6; cursor: pointer; font-size: 0.7rem; font-weight: 700;
+        }
+        .file-explorer-new summary::-webkit-details-marker { display: none; }
+        .file-explorer-new summary::after { content: " ▾"; }
+        .file-explorer-new[open] summary { background: #eaf5ee; }
+        .file-explorer-new-menu {
+            position: absolute; z-index: 5; top: calc(100% + 5px); right: 0;
+            display: flex; min-width: 145px; flex-direction: column; gap: 2px;
+            padding: 4px; border: 1px solid var(--border-color); border-radius: 7px;
+            background: #fff; box-shadow: 0 6px 18px rgba(28, 39, 51, 0.14);
+        }
+        .file-explorer-new-menu button {
+            padding: 8px; border: 0; border-radius: 4px; background: transparent;
+            color: var(--text-color); cursor: pointer; text-align: left; font: inherit; font-size: 0.75rem;
+        }
+        .file-explorer-new-menu button:hover { background: #edf2f5; }
+        .file-explorer-add {
+            padding: 5px 8px; border: 1px solid #cfe0e8; border-radius: 5px;
+            color: var(--accent-color); background: #f4f9fb; cursor: pointer; font: inherit;
+            font-size: 0.7rem; font-weight: 700;
+        }
+        .file-explorer-add[hidden] { display: none; }
+        .file-explorer-tree {
+            display: flex; flex: 1; flex-direction: column; gap: 3px; min-height: 58px;
+            overflow: auto;
+            padding: 6px; border: 1px solid var(--border-color); border-radius: 6px;
+            background: #fafbfc;
+        }
+        .file-explorer-empty {
+            padding: 8px 5px; color: var(--muted-color); font-size: 0.73rem; line-height: 1.45;
+        }
+        .file-tree-document { display: flex; flex-direction: column; gap: 2px; }
+        .file-tree-macro-entry { display: flex; align-items: center; min-width: 0; }
+        .file-tree-macro-entry > .file-tree-row { flex: 1; }
+        .file-tree-row {
+            width: 100%; min-width: 0; display: flex; align-items: center; gap: 7px;
+            padding: 6px; border: 0; border-radius: 4px; color: #394750;
+            background: transparent; cursor: pointer; text-align: left; font: inherit;
+            font-size: 0.75rem;
+        }
+        .file-tree-row:hover { background: #edf2f5; }
+        .file-tree-row[aria-current="true"] { color: #174d68; background: #e5f0f5; font-weight: 700; }
+        .file-tree-row.invalid, .file-tree-row.invalid[aria-current="true"] {
+            color: #b42318; background: #fff0ee;
+        }
+        .file-tree-row.invalid .file-tree-icon { color: #c92a1c; }
+        .file-tree-icon { flex: none; color: #71808b; font-size: 0.82rem; }
+        .file-tree-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .file-tree-children {
+            display: flex; flex-direction: column; gap: 2px; margin-left: 18px;
+            padding-left: 7px; border-left: 1px solid #dce2e8;
+        }
+        .file-tree-child { padding-left: 6px; }
+        .file-tree-remove {
+            margin-left: auto; padding: 2px 5px; border: 0; border-radius: 4px;
+            color: #8a5050; background: transparent; cursor: pointer; font: inherit;
+            font-size: 0.68rem;
+        }
+        .file-tree-remove:hover { background: #fff0f0; }
+        .file-export-actions { display: flex; flex-direction: column; gap: 8px; }
+        .file-export-category[hidden] { display: none; }
+        .export-btn:disabled, .export-btn.is-disabled { opacity: 0.55; cursor: not-allowed; box-shadow: none; }
+        .settings-panel { padding: 18px; min-width: 0; overflow-y: auto; }
         .macro-settings { display: flex; flex-direction: column; gap: 15px; }
         .macro-settings .macro-field { display: flex; flex-direction: column; gap: 6px; }
         .macro-settings input[type="text"], .macro-settings textarea {
@@ -112,7 +191,7 @@
         .sidebar-export { width: 100%; padding: 11px 14px; }
         .sidebar-import { width: 100%; padding: 11px 14px; color: var(--accent-color); background: #fff; border-color: var(--border-color); }
         .sidebar-import:hover { background: #f5f7f8; box-shadow: 0 2px 5px rgba(28, 39, 51, 0.08); }
-        .workspace { padding: 22px 24px; display: flex; flex-direction: column; min-width: 0; }
+        .workspace { padding: 22px 24px; display: flex; flex-direction: column; min-width: 0; overflow-y: auto; }
         .workspace-intro {
             display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;
             padding-bottom: 18px; border-bottom: 1px solid #e8ecef; margin-bottom: 17px;
@@ -160,7 +239,26 @@
         .palette-overlay {
             position: fixed; inset: 0; z-index: 1200; display: none;
             align-items: center; justify-content: center; padding: 18px;
-            background: rgba(20, 31, 40, 0.48); backdrop-filter: blur(2px);
+            opacity: 0; background: rgba(20, 31, 40, 0.48); backdrop-filter: blur(2px);
+        }
+        .palette-overlay.is-open, .scene-editor-overlay.is-open, .modal-overlay.is-open { animation: popup-overlay-enter 180ms ease-out both; }
+        .palette-overlay.is-closing, .scene-editor-overlay.is-closing, .modal-overlay.is-closing { animation: popup-overlay-exit 150ms ease-in both; }
+        .palette-dialog { transform-origin: center; }
+        .palette-overlay.is-open .palette-dialog, .scene-editor-overlay.is-open .scene-editor, .modal-overlay.is-open .modal {
+            animation: popup-panel-enter 200ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+        }
+        .palette-overlay.is-closing .palette-dialog, .scene-editor-overlay.is-closing .scene-editor, .modal-overlay.is-closing .modal {
+            animation: popup-panel-exit 140ms ease-in both;
+        }
+        @keyframes popup-overlay-enter { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes popup-overlay-exit { from { opacity: 1; } to { opacity: 0; } }
+        @keyframes popup-panel-enter {
+            from { opacity: 0; transform: translateY(12px) scale(0.975); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes popup-panel-exit {
+            from { opacity: 1; transform: translateY(0) scale(1); }
+            to { opacity: 0; transform: translateY(6px) scale(0.985); }
         }
         .palette-overlay.trigger { --palette-color: #e34246; --palette-tint: #fff0f0; --palette-border: #f0c8ca; }
         .palette-overlay.action { --palette-color: #168fc9; --palette-tint: #edf8fd; --palette-border: #c7e3f1; }
@@ -358,7 +456,7 @@
         .scene-editor-overlay {
             position: fixed; inset: 0; z-index: 1100; display: none;
             align-items: center; justify-content: center; padding: 18px;
-            background: rgba(20, 31, 40, 0.48); backdrop-filter: blur(2px);
+            opacity: 0; background: rgba(20, 31, 40, 0.48); backdrop-filter: blur(2px);
         }
         .scene-editor {
             width: min(1120px, 100%); height: min(790px, 100%);
@@ -513,9 +611,32 @@
         }
         .scene-editor-note { color: var(--muted-color); font-size: 0.71rem; }
         .scene-editor-footer-actions { display: flex; gap: 8px; }
-        @media (max-width: 900px) {
+        .toast-stack {
+            position: fixed; z-index: 20; top: 18px; right: 18px; display: flex;
+            width: min(380px, calc(100vw - 36px)); flex-direction: column; gap: 9px;
+            pointer-events: none;
+        }
+        .toast {
+            display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px;
+            border: 1px solid #d8e2e8; border-radius: 9px; background: #fff;
+            box-shadow: 0 8px 24px rgba(28, 39, 51, 0.15); color: var(--text-color);
+            font-size: 0.82rem; line-height: 1.45; pointer-events: auto;
+            animation: toast-enter 180ms ease-out both;
+        }
+        .toast::before { content: "✓"; color: #398365; font-weight: 800; }
+        .toast.error { border-color: #efc5c1; background: #fff9f8; }
+        .toast.error::before { content: "!"; color: #b42318; }
+        .toast.leaving { animation: toast-leave 150ms ease-in both; }
+        @keyframes toast-enter { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes toast-leave { to { opacity: 0; transform: translateX(12px); } }
+        button { transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease, transform 140ms ease, box-shadow 140ms ease; }
+        button:active { transform: translateY(1px); }
+        .block { animation: block-enter 180ms ease-out both; }
+        @keyframes block-enter { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        @media (max-width: 1100px) {
             header { padding: 12px 18px; }
-            .main-container { grid-template-columns: 270px minmax(0, 1fr); gap: 14px; padding: 16px 18px 20px; }
+            .main-container { grid-template-columns: minmax(170px, 210px) minmax(0, 1fr) minmax(190px, 220px); gap: 14px; padding: 16px 18px 20px; }
+            .sidebar, .settings-panel { padding: 14px; }
             .workspace { padding: 18px; }
             .workflow-hint { display: none; }
             .scene-editor-body {
@@ -528,13 +649,20 @@
             }
             .scene-component-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
+        @media (max-width: 820px) {
+            .main-container { grid-template-columns: minmax(190px, 260px) minmax(0, 1fr); }
+            .explorer-panel { grid-row: span 2; }
+            .settings-panel { grid-column: 2; }
+            .workspace { min-height: 520px; }
+        }
         @media (max-width: 680px) {
             header { align-items: flex-start; flex-wrap: wrap; gap: 12px; }
             .brand { flex: 1 1 100%; }
             .topbar-controls { flex: 1 1 100%; justify-content: space-between; gap: 10px; }
             #macroName { width: 100%; }
             .main-container { grid-template-columns: 1fr; overflow: visible; }
-            .sidebar { max-height: 430px; }
+            .explorer-panel { grid-row: auto; min-height: 280px; }
+            .settings-panel { grid-column: auto; max-height: none; }
             .workspace { min-height: 520px; }
             .workflow-section-header { min-height: 60px; padding: 10px 12px; }
             .workflow-section-header h3 { font-size: 0.95rem; }
@@ -568,6 +696,9 @@
             .scene-editor-header, .scene-editor-footer { padding: 11px 12px; }
             .scene-editor-note { display: none; }
         }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+        }
     </style>
 </head>
 <body>
@@ -593,28 +724,27 @@
     </header>
 
     <div class="main-container">
-        <aside class="sidebar" aria-label="Macro settings">
-            <div class="sidebar-heading">
-                <h2>Macro settings</h2>
-                <p>Set the macro details, then import or export your automation.</p>
-            </div>
-            <div class="macro-settings">
-                <label class="macro-field" for="macroName">
-                    <span class="field-label">Macro name</span>
-                    <input type="text" id="macroName" value="Massive Macro" maxlength="100">
-                </label>
-                <label class="macro-field" for="macroDescription">
-                    <span class="field-label">Description</span>
-                    <textarea id="macroDescription" placeholder="Describe what this macro does..."></textarea>
-                </label>
-                <label class="macro-enabled">
-                    <input type="checkbox" id="macroEnabled" checked>
-                    <span>Enable macro<small>Disabled macros are included in the export but will not run.</small></span>
-                </label>
-                <button class="export-btn sidebar-import" type="button" onclick="document.getElementById('macroImportFile').click()">Import .macro</button>
-                <input id="macroImportFile" type="file" accept=".macro,.json,application/json" hidden onchange="importMacro(this)">
-                <button class="export-btn sidebar-export" type="button" onclick="exportMacro()">Export .macro</button>
-            </div>
+        <aside class="sidebar explorer-panel" aria-label="File Explorer">
+            <section class="file-explorer" aria-labelledby="fileExplorerTitle">
+                <div class="file-explorer-header">
+                    <h3 id="fileExplorerTitle">Explorer</h3>
+                    <div class="file-explorer-actions">
+                        <button class="file-explorer-open" type="button" onclick="document.getElementById('documentImportFiles').click()">Open files</button>
+                        <details class="file-explorer-new">
+                            <summary aria-label="Create new">New</summary>
+                            <div class="file-explorer-new-menu">
+                                <button type="button" onclick="openNewDocumentDialog('macro')">New macro</button>
+                                <button type="button" onclick="openNewDocumentDialog('category')">New category</button>
+                            </div>
+                        </details>
+                    </div>
+                    <button class="file-explorer-add" id="addCategoryMacroButton" type="button" onclick="addEmptyCategoryMacro()" hidden>+ Macro</button>
+                </div>
+                <input id="documentImportFiles" type="file" accept=".macro,.category,.json,application/json" multiple hidden onchange="importDocuments(this)">
+                <div class="file-explorer-tree" id="fileExplorerTree" role="tree" aria-label="Opened MacroDroid files">
+                    <div class="file-explorer-empty">Open .macro or .category files to browse them here.</div>
+                </div>
+            </section>
         </aside>
 
         <div class="workspace">
@@ -652,8 +782,34 @@
                 <div id="actionZone" class="section-dropzone"></div>
             </section>
         </div>
+
+        <aside class="settings-panel" aria-label="Macro settings">
+            <div class="sidebar-heading">
+                <h2>Macro settings</h2>
+                <p>Edit the selected macro's settings, then export it or its category.</p>
+            </div>
+            <div class="macro-settings">
+                <label class="macro-field" for="macroName">
+                    <span class="field-label">Macro name</span>
+                    <input type="text" id="macroName" value="Massive Macro" maxlength="100">
+                </label>
+                <label class="macro-field" for="macroDescription">
+                    <span class="field-label">Description</span>
+                    <textarea id="macroDescription" placeholder="Describe what this macro does..."></textarea>
+                </label>
+                <label class="macro-enabled">
+                    <input type="checkbox" id="macroEnabled" checked>
+                    <span>Enable macro<small>Disabled macros are included in the export but will not run.</small></span>
+                </label>
+                <div class="file-export-actions">
+                    <button class="export-btn sidebar-export" type="button" onclick="exportMacro()">Export selected .macro</button>
+                    <button class="export-btn sidebar-import file-export-category" id="exportCategoryButton" type="button" onclick="exportCategory()" hidden>Export category .category</button>
+                </div>
+            </div>
+        </aside>
     </div>
 
+    <div class="toast-stack" id="toastStack" role="status" aria-live="polite" aria-atomic="false"></div>
     <div class="palette-overlay" id="paletteOverlay" role="dialog" aria-modal="true" aria-labelledby="paletteTitle" onclick="handlePaletteOverlayClick(event)">
         <div class="palette-dialog">
             <div class="palette-dialog-header">
@@ -676,6 +832,20 @@
                 <button class="btn-save" onclick="saveModal()">Save Changes</button>
             </div>
         </div>
+    </div>
+
+    <div class="modal-overlay" id="newDocumentOverlay" role="dialog" aria-modal="true" aria-labelledby="newDocumentTitle" onclick="handleNewDocumentOverlayClick(event)">
+        <form class="modal" onsubmit="event.preventDefault(); createNewDocument()">
+            <h3 id="newDocumentTitle">Create macro</h3>
+            <label class="macro-field" for="newDocumentName">
+                <span class="field-label" id="newDocumentNameLabel">Macro name</span>
+                <input type="text" id="newDocumentName" maxlength="100" value="New Macro" autocomplete="off">
+            </label>
+            <div class="modal-buttons">
+                <button class="btn-cancel" type="button" onclick="closeNewDocumentDialog()">Cancel</button>
+                <button class="btn-save" id="createNewDocumentButton" type="submit">Create macro</button>
+            </div>
+        </form>
     </div>
 
     <div class="scene-editor-overlay" id="sceneEditorOverlay" role="dialog" aria-modal="true" aria-labelledby="sceneEditorTitle">
@@ -1438,13 +1608,208 @@
     let currentSceneEdit = null;
     let activePaletteSection = null;
     let paletteReturnFocus = null;
+    let openedDocuments = [];
+    let activeDocument = null;
+    let activeMacroRaw = null;
+    let nextDocumentId = 1;
+    let newDocumentReturnFocus = null;
+    let newDocumentKind = 'macro';
+    const overlayCloseTimers = new WeakMap();
+
+    function showAnimatedOverlay(overlay) {
+        const pendingClose = overlayCloseTimers.get(overlay);
+        if (pendingClose) {
+            window.clearTimeout(pendingClose);
+            overlayCloseTimers.delete(overlay);
+        }
+        overlay.classList.remove('is-open', 'is-closing');
+        overlay.style.display = 'flex';
+        void overlay.offsetWidth;
+        overlay.classList.add('is-open');
+    }
+
+    function hideAnimatedOverlay(overlay, onHidden) {
+        if (overlay.style.display !== 'flex' || overlay.classList.contains('is-closing')) return false;
+        overlay.classList.remove('is-open');
+        overlay.classList.add('is-closing');
+        const timer = window.setTimeout(() => {
+            overlay.style.display = 'none';
+            overlay.classList.remove('is-closing');
+            overlayCloseTimers.delete(overlay);
+            onHidden?.();
+        }, 170);
+        overlayCloseTimers.set(overlay, timer);
+        return true;
+    }
+
+    function openNewDocumentDialog(kind) {
+        newDocumentKind = kind;
+        newDocumentReturnFocus = document.activeElement;
+        document.querySelector('.file-explorer-new').open = false;
+        const isCategory = kind === 'category';
+        document.getElementById('newDocumentTitle').textContent = isCategory ? 'Create category' : 'Create macro';
+        document.getElementById('newDocumentNameLabel').textContent = isCategory ? 'Category name' : 'Macro name';
+        document.getElementById('createNewDocumentButton').textContent = isCategory ? 'Create category' : 'Create macro';
+        const overlay = document.getElementById('newDocumentOverlay');
+        showAnimatedOverlay(overlay);
+        const nameInput = document.getElementById('newDocumentName');
+        nameInput.value = isCategory ? 'New Category' : 'New Macro';
+        nameInput.focus();
+        nameInput.select();
+    }
+
+    function closeNewDocumentDialog() {
+        const returnFocus = newDocumentReturnFocus;
+        if (hideAnimatedOverlay(document.getElementById('newDocumentOverlay'), () => {
+            returnFocus?.focus();
+            newDocumentReturnFocus = null;
+        })) newDocumentReturnFocus = null;
+    }
+
+    function handleNewDocumentOverlayClick(event) {
+        if (event.target === event.currentTarget) closeNewDocumentDialog();
+    }
+
+    function createEmptyMacro(name, category, guid) {
+        return {
+            aiGenerated: 1,
+            breakpoints: [],
+            exportedActionBlocks: [],
+            exportedSharedScenes: [],
+            localVariables: [],
+            localVarsAlphabetical: true,
+            loggingLevel: 0,
+            m_GUID: guid,
+            m_category: category,
+            m_description: '',
+            m_descriptionOpen: false,
+            m_enabled: true,
+            m_excludeLog: false,
+            m_headingColor: 0,
+            m_isOrCondition: false,
+            m_name: name,
+            m_triggerList: [],
+            m_constraintList: [],
+            m_actionList: [],
+            m_completed: false
+        };
+    }
+
+    function createNewDocument() {
+        const name = document.getElementById('newDocumentName').value.trim();
+        const isCategory = newDocumentKind === 'category';
+        if (!name) {
+            showToast(`Enter a name for the ${isCategory ? 'category' : 'macro'}.`, 'error');
+            document.getElementById('newDocumentName').focus();
+            return;
+        }
+        saveActiveMacro();
+        const safeFileName = name.replace(/[<>:"/\\|?*\x00-\x1F]/g, '_').replace(/\s+/g, '_');
+        const documentRecord = {
+            id: `document-${nextDocumentId++}`,
+            kind: newDocumentKind,
+            fileName: `${safeFileName}.${isCategory ? 'category' : 'macro'}`
+        };
+        if (isCategory) {
+            documentRecord.data = {
+                categoryName: name,
+                macros: [],
+                globalVariables: [],
+                userIcons: []
+            };
+            documentRecord.selectedMacroIndex = 0;
+        } else {
+            documentRecord.data = {
+                macroExportVersion: 1,
+                macro: createEmptyMacro(name, 'Uncategorized', 0),
+                globalVariables: [],
+                userIcons: []
+            };
+        }
+        openedDocuments.push(documentRecord);
+        closeNewDocumentDialog();
+        selectDocumentMacro(documentRecord.id);
+        showToast(isCategory
+            ? `Created category "${name}". Add macros with + Macro.`
+            : `Created macro "${name}". Add a trigger and an action before exporting.`);
+    }
+
+    function showToast(message, type = 'success') {
+        const stack = document.getElementById('toastStack');
+        if (!stack) return;
+        const toast = document.createElement('div');
+        toast.className = `toast${type === 'error' ? ' error' : ''}`;
+        toast.textContent = message;
+        stack.appendChild(toast);
+        window.setTimeout(() => {
+            toast.classList.add('leaving');
+            window.setTimeout(() => toast.remove(), 180);
+        }, type === 'error' ? 7000 : 4000);
+    }
+
+    function macroValidationError(macro) {
+        if (!Array.isArray(macro?.m_triggerList) || macro.m_triggerList.length === 0) {
+            return 'Add at least one trigger.';
+        }
+        if (!Array.isArray(macro?.m_actionList) || macro.m_actionList.length === 0) {
+            return 'Add at least one action.';
+        }
+        return '';
+    }
+
+    function getDocumentMacro(documentRecord, index = 0) {
+        if (activeDocument?.id === documentRecord.id &&
+            (documentRecord.kind !== 'category' || documentRecord.selectedMacroIndex === index)) {
+            return serializeCurrentMacro();
+        }
+        return documentRecord.kind === 'category'
+            ? documentRecord.data.macros[index]
+            : documentRecord.data.macro;
+    }
+
+    function updateExportButtons() {
+        const macroButton = document.querySelector('.sidebar-export');
+        const categoryButton = document.getElementById('exportCategoryButton');
+        const addButton = document.getElementById('addCategoryMacroButton');
+        const isCategory = activeDocument?.kind === 'category';
+        addButton.hidden = !isCategory;
+        categoryButton.hidden = !isCategory;
+        const currentMacro = activeDocument
+            ? getDocumentMacro(activeDocument, activeDocument.selectedMacroIndex || 0)
+            : null;
+        const macroUnavailable = !currentMacro || Boolean(macroValidationError(currentMacro));
+        const categoryUnavailable = isCategory && activeDocument.data.macros.some((macro, index) =>
+            Boolean(macroValidationError(getDocumentMacro(activeDocument, index)))
+        );
+        macroButton.classList.toggle('is-disabled', macroUnavailable);
+        macroButton.setAttribute('aria-disabled', String(macroUnavailable));
+        categoryButton.classList.toggle('is-disabled', categoryUnavailable);
+        categoryButton.setAttribute('aria-disabled', String(categoryUnavailable));
+        macroButton.title = macroUnavailable
+            ? macroValidationError(currentMacro) || 'Select a macro to export.'
+            : '';
+        categoryButton.title = categoryUnavailable
+            ? 'Every macro in the category needs at least one trigger and one action.'
+            : '';
+    }
 
     function initCatalogs() {
         renderWorkspace();
+        renderFileExplorer();
+        document.getElementById('macroName').addEventListener('input', () => {
+            renderFileExplorer();
+            updateExportButtons();
+        });
+        document.getElementById('macroDescription').addEventListener('input', updateExportButtons);
+        document.getElementById('macroEnabled').addEventListener('change', updateExportButtons);
         document.addEventListener('keydown', event => {
             if (event.key === 'Escape' && document.getElementById('paletteOverlay').style.display === 'flex') {
                 closePalette();
             }
+            if (event.key === 'Escape' && document.getElementById('newDocumentOverlay').style.display === 'flex') {
+                closeNewDocumentDialog();
+            }
+            if (event.key === 'Escape') document.querySelector('.file-explorer-new').open = false;
         });
     }
 
@@ -1483,7 +1848,7 @@
         search.value = '';
         search.placeholder = `Search ${section === 'constraint' ? 'constraints' : section + 's'}...`;
         renderPalette(section, masterCatalogs[section]);
-        overlay.style.display = 'flex';
+        showAnimatedOverlay(overlay);
         document.body.style.overflow = 'hidden';
         search.focus();
     }
@@ -1498,12 +1863,16 @@
     function closePalette() {
         const overlay = document.getElementById('paletteOverlay');
         if (overlay.style.display !== 'flex') return;
-        overlay.style.display = 'none';
-        document.body.style.overflow = '';
-        activePaletteSection = null;
         const returnFocus = paletteReturnFocus;
-        paletteReturnFocus = null;
-        returnFocus?.focus();
+        if (hideAnimatedOverlay(overlay, () => {
+            document.body.style.overflow = '';
+            activePaletteSection = null;
+            paletteReturnFocus = null;
+            returnFocus?.focus();
+        })) {
+            activePaletteSection = null;
+            paletteReturnFocus = null;
+        }
     }
 
     function handlePaletteOverlayClick(event) {
@@ -2238,7 +2607,7 @@
                 button.textContent = 'Advanced JSON';
                 renderParameterFields();
             } catch (error) {
-                alert(`Invalid parameters JSON: ${error.message}`);
+                showToast(`Invalid parameters JSON: ${error.message}`, 'error');
                 textarea.focus();
             }
         }
@@ -2294,11 +2663,11 @@
         advanced.append(textarea, note);
         form.appendChild(advanced);
         renderParameterFields();
-        document.getElementById('modalOverlay').style.display = 'flex';
+        showAnimatedOverlay(document.getElementById('modalOverlay'));
     }
 
     function closeModal() {
-        document.getElementById('modalOverlay').style.display = 'none';
+        hideAnimatedOverlay(document.getElementById('modalOverlay'));
         currentEdit = null;
     }
 
@@ -2321,7 +2690,7 @@
         document.getElementById('sceneBlockNext').checked = sceneConfig.blockNextActions === true;
         updateSceneDisplayControls(sceneConfig);
         renderSceneEditor();
-        document.getElementById('sceneEditorOverlay').style.display = 'flex';
+        showAnimatedOverlay(document.getElementById('sceneEditorOverlay'));
     }
 
     function normalizeSceneConfig(sceneConfig) {
@@ -2484,7 +2853,7 @@
     }
 
     function closeSceneEditor() {
-        document.getElementById('sceneEditorOverlay').style.display = 'none';
+        hideAnimatedOverlay(document.getElementById('sceneEditorOverlay'));
         currentSceneEdit = null;
     }
 
@@ -2492,7 +2861,7 @@
         if (!currentSceneEdit) return;
         const { index, scene } = currentSceneEdit;
         if (!scene.sceneConfig.name.trim()) {
-            alert('Enter a name for this scene before saving.');
+            showToast('Enter a name for this scene before saving.', 'error');
             document.getElementById('sceneName').focus();
             return;
         }
@@ -2769,7 +3138,7 @@
                 }
                 currentEdit.block.params = params;
             } catch (error) {
-                alert(`Invalid parameters JSON: ${error.message}`);
+                showToast(`Invalid parameters JSON: ${error.message}`, 'error');
                 textarea.focus();
                 return;
             }
@@ -2781,7 +3150,7 @@
                 !Object.prototype.hasOwnProperty.call(currentEdit.block.params, key))
             .map(([key]) => parameterLabel(key));
         if (missingRequired.length) {
-            alert(`Add the required settings before saving: ${missingRequired.join(', ')}`);
+            showToast(`Add the required settings before saving: ${missingRequired.join(', ')}`, 'error');
             return;
         }
         Object.entries(metadata?.fields || {}).forEach(([key, field]) => {
@@ -2878,45 +3247,316 @@
                 container.appendChild(blockDiv);
             });
         });
+        renderFileExplorer();
+        updateExportButtons();
     }
 
-    function exportMacro() {
-        if (macroState.triggers.length === 0) {
-            alert('Your macro must have at least one trigger!');
+    function buildBlockList(list) {
+        return list.map(block => ({
+            ...block.params,
+            m_classType: block.m_classType,
+            m_SIGUID: block.m_SIGUID
+        }));
+    }
+
+    function serializeCurrentMacro() {
+        return {
+            ...(activeMacroRaw || {
+                aiGenerated: 1,
+                breakpoints: [],
+                exportedActionBlocks: [],
+                exportedSharedScenes: [],
+                localVariables: [],
+                localVarsAlphabetical: true,
+                loggingLevel: 0,
+                m_GUID: 0,
+                m_category: 'Uncategorized',
+                m_descriptionOpen: false,
+                m_excludeLog: false,
+                m_headingColor: 0,
+                m_isOrCondition: false
+            }),
+            m_name: document.getElementById('macroName').value || 'Macro',
+            m_description: document.getElementById('macroDescription').value,
+            m_enabled: document.getElementById('macroEnabled').checked,
+            m_completed: true,
+            m_triggerList: buildBlockList(macroState.triggers),
+            m_actionList: buildBlockList(macroState.actions),
+            m_constraintList: buildBlockList(macroState.constraints)
+        };
+    }
+
+    function saveActiveMacro() {
+        if (!activeDocument || !activeMacroRaw) return;
+        activeMacroRaw = serializeCurrentMacro();
+        if (activeDocument.kind === 'category') {
+            activeDocument.data.macros[activeDocument.selectedMacroIndex] =
+                JSON.parse(JSON.stringify(activeMacroRaw));
+        } else {
+            activeDocument.data.macro = JSON.parse(JSON.stringify(activeMacroRaw));
+        }
+    }
+
+    function loadMacroIntoEditor(rawMacro) {
+        activeMacroRaw = JSON.parse(JSON.stringify(rawMacro));
+        macroState.triggers = importedBlocks(activeMacroRaw.m_triggerList || [], 'trigger');
+        macroState.constraints = importedBlocks(activeMacroRaw.m_constraintList || [], 'constraint');
+        macroState.actions = importedBlocks(activeMacroRaw.m_actionList || [], 'action');
+        document.getElementById('macroName').value = activeMacroRaw.m_name || 'Macro';
+        document.getElementById('macroDescription').value = activeMacroRaw.m_description || '';
+        document.getElementById('macroEnabled').checked = activeMacroRaw.m_enabled ?? true;
+        renderWorkspace();
+    }
+
+    function selectDocumentMacro(documentId, macroIndex = 0) {
+        const documentRecord = openedDocuments.find(entry => entry.id === documentId);
+        if (!documentRecord) return;
+        if (documentRecord.kind === 'category') {
+            const macroCount = documentRecord.data.macros.length;
+            if (!Number.isInteger(macroIndex) || macroIndex < 0 ||
+                (macroCount === 0 ? macroIndex !== 0 : macroIndex >= macroCount)) return;
+        }
+        saveActiveMacro();
+        activeDocument = documentRecord;
+        if (documentRecord.kind === 'category') {
+            documentRecord.selectedMacroIndex = macroIndex;
+            if (documentRecord.data.macros.length) {
+                loadMacroIntoEditor(documentRecord.data.macros[macroIndex]);
+            } else {
+                activeMacroRaw = null;
+                macroState.triggers = [];
+                macroState.constraints = [];
+                macroState.actions = [];
+                document.getElementById('macroName').value = '';
+                document.getElementById('macroDescription').value = '';
+                document.getElementById('macroEnabled').checked = true;
+                renderWorkspace();
+            }
+        } else {
+            loadMacroIntoEditor(documentRecord.data.macro);
+        }
+        renderFileExplorer();
+        updateExportButtons();
+    }
+
+    function makeFileTreeRow(icon, label, options = {}) {
+        const row = document.createElement('button');
+        row.type = 'button';
+        row.className = `file-tree-row${options.child ? ' file-tree-child' : ''}`;
+        row.setAttribute('role', 'treeitem');
+        if (options.selected) row.setAttribute('aria-current', 'true');
+        if (options.invalid) {
+            row.classList.add('invalid');
+            row.title = options.validationError || 'Macro needs at least one trigger and one action.';
+            row.setAttribute('aria-label', `${label}. Incomplete macro.`);
+        }
+        const iconElement = document.createElement('span');
+        iconElement.className = 'file-tree-icon';
+        iconElement.setAttribute('aria-hidden', 'true');
+        iconElement.textContent = icon;
+        const labelElement = document.createElement('span');
+        labelElement.className = 'file-tree-label';
+        labelElement.textContent = label;
+        row.append(iconElement, labelElement);
+        if (options.onClick) row.addEventListener('click', options.onClick);
+        return row;
+    }
+
+    function addDocumentRemoveButton(container, documentRecord) {
+        const remove = document.createElement('button');
+        remove.type = 'button';
+        remove.className = 'file-tree-remove';
+        remove.textContent = '×';
+        remove.setAttribute('aria-label', `Close ${documentRecord.fileName}`);
+        remove.addEventListener('click', event => {
+            event.stopPropagation();
+            removeOpenedDocument(documentRecord.id);
+        });
+        container.appendChild(remove);
+    }
+
+    function renderFileExplorer() {
+        const tree = document.getElementById('fileExplorerTree');
+        if (!tree) return;
+        tree.replaceChildren();
+        document.getElementById('addCategoryMacroButton').hidden = activeDocument?.kind !== 'category';
+        if (!openedDocuments.length) {
+            const empty = document.createElement('div');
+            empty.className = 'file-explorer-empty';
+            empty.textContent = 'Open .macro or .category files to browse them here.';
+            tree.appendChild(empty);
             return;
         }
+        openedDocuments.forEach(documentRecord => {
+            const documentNode = document.createElement('div');
+            documentNode.className = 'file-tree-document';
+            documentNode.setAttribute('role', 'none');
+            if (documentRecord.kind === 'macro') {
+                const entry = document.createElement('div');
+                entry.className = 'file-tree-macro-entry';
+                const isActive = activeDocument?.id === documentRecord.id;
+                const macro = getDocumentMacro(documentRecord);
+                const validationError = macroValidationError(macro);
+                const row = makeFileTreeRow('▤', isActive
+                    ? document.getElementById('macroName').value || documentRecord.fileName
+                    : documentRecord.data.macro.m_name || documentRecord.fileName, {
+                    selected: isActive,
+                    invalid: Boolean(validationError),
+                    validationError,
+                    onClick: () => selectDocumentMacro(documentRecord.id)
+                });
+                row.title = documentRecord.fileName;
+                entry.appendChild(row);
+                addDocumentRemoveButton(entry, documentRecord);
+                documentNode.appendChild(entry);
+            } else {
+                const header = document.createElement('div');
+                header.className = 'file-tree-row';
+                header.setAttribute('role', 'treeitem');
+                const hasInvalidMacro = documentRecord.data.macros.some((macro, index) =>
+                    Boolean(macroValidationError(getDocumentMacro(documentRecord, index)))
+                );
+                if (hasInvalidMacro) {
+                    header.classList.add('invalid');
+                    header.title = 'One or more macros need at least one trigger and one action.';
+                }
+                const icon = document.createElement('span');
+                icon.className = 'file-tree-icon';
+                icon.setAttribute('aria-hidden', 'true');
+                icon.textContent = '▾';
+                const label = document.createElement('span');
+                label.className = 'file-tree-label';
+                label.textContent = documentRecord.data.categoryName || documentRecord.fileName;
+                label.title = documentRecord.fileName;
+                header.append(icon, label);
+                addDocumentRemoveButton(header, documentRecord);
+                documentNode.appendChild(header);
+                const children = document.createElement('div');
+                children.className = 'file-tree-children';
+                children.setAttribute('role', 'group');
+                documentRecord.data.macros.forEach((macro, index) => {
+                    const isActive = activeDocument?.id === documentRecord.id &&
+                        documentRecord.selectedMacroIndex === index;
+                    const validationError = macroValidationError(getDocumentMacro(documentRecord, index));
+                    const row = makeFileTreeRow('▤', isActive
+                        ? document.getElementById('macroName').value || `Macro ${index + 1}`
+                        : macro.m_name || `Macro ${index + 1}`, {
+                        child: true,
+                        selected: isActive,
+                        invalid: Boolean(validationError),
+                        validationError,
+                        onClick: () => selectDocumentMacro(documentRecord.id, index)
+                    });
+                    children.appendChild(row);
+                });
+                if (!documentRecord.data.macros.length) {
+                    const empty = document.createElement('div');
+                    empty.className = 'file-explorer-empty';
+                    empty.textContent = 'This category contains no macros.';
+                    children.appendChild(empty);
+                }
+                documentNode.appendChild(children);
+            }
+            tree.appendChild(documentNode);
+        });
+        updateExportButtons();
+    }
 
-        const buildList = (list) => list.map(b => ({
-            m_classType: b.m_classType,
-            m_SIGUID: b.m_SIGUID,
-            ...b.params
-        }));
+    function addEmptyCategoryMacro() {
+        if (activeDocument?.kind !== 'category') return;
+        saveActiveMacro();
+        const macros = activeDocument.data.macros;
+        const existingGuids = macros.map(macro => macro.m_GUID).filter(Number.isFinite);
+        const nextGuid = existingGuids.length ? Math.max(...existingGuids) + 1 : 0;
+        const newMacro = createEmptyMacro(
+            `Macro ${macros.length + 1}`,
+            activeDocument.data.categoryName || 'Uncategorized',
+            nextGuid
+        );
+        macros.push(newMacro);
+        selectDocumentMacro(activeDocument.id, macros.length - 1);
+        showToast('Added an empty macro to the category. Add a trigger and an action before exporting.');
+    }
 
-        const exportObject = {
-            macroExportVersion: 1,
-            macro: {
-                m_name: document.getElementById('macroName').value || 'Massive Macro',
-                m_description: document.getElementById('macroDescription').value,
-                m_enabled: document.getElementById('macroEnabled').checked,
-                m_completed: true,
-                m_GUID: 0,
-                aiGenerated: 1,
-                m_triggerList: buildList(macroState.triggers),
-                m_actionList: buildList(macroState.actions),
-                m_constraintList: buildList(macroState.constraints)
-            },
-            globalVariables: [],
-            userIcons: null,
-            aiFeedback: "Exported successfully from massive catalog editor."
-        };
+    function removeOpenedDocument(documentId) {
+        const removedIndex = openedDocuments.findIndex(entry => entry.id === documentId);
+        if (removedIndex < 0) return;
+        if (activeDocument?.id === documentId) saveActiveMacro();
+        openedDocuments.splice(removedIndex, 1);
+        if (activeDocument?.id === documentId) {
+            activeDocument = null;
+            activeMacroRaw = null;
+            macroState.triggers = [];
+            macroState.constraints = [];
+            macroState.actions = [];
+            document.getElementById('macroName').value = 'Massive Macro';
+            document.getElementById('macroDescription').value = '';
+            document.getElementById('macroEnabled').checked = true;
+            document.getElementById('exportCategoryButton').hidden = true;
+            document.getElementById('addCategoryMacroButton').hidden = true;
+            if (openedDocuments.length) {
+                const next = openedDocuments[Math.min(removedIndex, openedDocuments.length - 1)];
+                selectDocumentMacro(next.id, next.kind === 'category' ? next.selectedMacroIndex : 0);
+            } else {
+                renderWorkspace();
+            }
+        }
+        renderFileExplorer();
+        updateExportButtons();
+    }
 
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObject, null, 2));
+    function downloadJsonFile(data, fileName) {
+        const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(data, null, 2))}`;
         const downloadAnchor = document.createElement('a');
-        downloadAnchor.setAttribute("href", dataStr);
-        downloadAnchor.setAttribute("download", `${exportObject.macro.m_name.replace(/\s+/g, '_')}.macro`);
+        downloadAnchor.href = dataStr;
+        downloadAnchor.download = fileName;
         document.body.appendChild(downloadAnchor);
         downloadAnchor.click();
         downloadAnchor.remove();
+    }
+
+    function exportMacro() {
+        saveActiveMacro();
+        const macro = activeDocument?.kind === 'macro'
+            ? activeDocument.data.macro
+            : activeMacroRaw || serializeCurrentMacro();
+        const validationError = macroValidationError(macro);
+        if (validationError) {
+            showToast("The indicated macro's must heave atleast 1 trigger and 1 action.", 'error');
+            renderFileExplorer();
+            return;
+        }
+        const exportObject = activeDocument?.kind === 'macro'
+            ? JSON.parse(JSON.stringify(activeDocument.data))
+            : {
+                macroExportVersion: 1,
+                macro: JSON.parse(JSON.stringify(macro)),
+                globalVariables: activeDocument?.kind === 'category'
+                    ? JSON.parse(JSON.stringify(activeDocument.data.globalVariables || []))
+                    : [],
+                userIcons: activeDocument?.kind === 'category'
+                    ? JSON.parse(JSON.stringify(activeDocument.data.userIcons || []))
+                    : []
+            };
+        const baseName = (macro.m_name || 'Macro').replace(/[<>:"/\\|?*\x00-\x1F]/g, '_').replace(/\s+/g, '_');
+        downloadJsonFile(exportObject, `${baseName}.macro`);
+        showToast('Macro exported.');
+    }
+
+    function exportCategory() {
+        if (activeDocument?.kind !== 'category') return;
+        saveActiveMacro();
+        const invalidMacros = activeDocument.data.macros
+            .map((macro, index) => ({ macro, index, error: macroValidationError(macro) }))
+            .filter(entry => entry.error);
+        if (invalidMacros.length) {
+            showToast("The indicated macro's must heave atleast 1 trigger and 1 action.", 'error');
+            renderFileExplorer();
+            return;
+        }
+        const category = JSON.parse(JSON.stringify(activeDocument.data));
+        downloadJsonFile(category, `${(category.categoryName || 'Category').replace(/[<>:"/\\|?*\x00-\x1F]/g, '_').replace(/\s+/g, '_')}.category`);
+        showToast('Category exported.');
     }
 
     function importedBlocks(list, section) {
@@ -2943,43 +3583,60 @@
         });
     }
 
-    async function importMacro(fileInput) {
-        const file = fileInput.files[0];
-        if (!file) return;
+    function validateRawMacro(macro, label) {
+        if (!macro || typeof macro !== 'object' || Array.isArray(macro)) {
+            throw new Error(`${label} does not contain a valid macro.`);
+        }
+        if (macro.m_name !== undefined && typeof macro.m_name !== 'string') {
+            throw new Error(`${label} has an invalid macro name.`);
+        }
+        ['m_triggerList', 'm_constraintList', 'm_actionList'].forEach(key => {
+            if (macro[key] !== undefined && !Array.isArray(macro[key])) {
+                throw new Error(`${label} has an invalid ${key}.`);
+            }
+        });
+        importedBlocks(macro.m_triggerList || [], 'trigger');
+        importedBlocks(macro.m_constraintList || [], 'constraint');
+        importedBlocks(macro.m_actionList || [], 'action');
+    }
 
+    async function importDocuments(fileInput) {
+        const files = Array.from(fileInput.files || []);
+        if (!files.length) return;
         try {
-            const imported = JSON.parse(await file.text());
-            const macro = imported?.macro;
-            if (!macro || typeof macro !== 'object' || Array.isArray(macro)) {
-                throw new Error('This file does not contain a valid macro.');
+            const incoming = [];
+            for (const file of files) {
+                const data = JSON.parse(await file.text());
+                if (Array.isArray(data?.macros) && typeof data.categoryName === 'string') {
+                    data.macros.forEach((macro, index) => validateRawMacro(macro, `${file.name}, macro ${index + 1}`));
+                    incoming.push({
+                        id: `document-${nextDocumentId++}`,
+                        kind: 'category',
+                        fileName: file.name,
+                        data,
+                        selectedMacroIndex: 0
+                    });
+                } else if (data?.macro && typeof data.macro === 'object' && !Array.isArray(data.macro)) {
+                    validateRawMacro(data.macro, file.name);
+                    incoming.push({
+                        id: `document-${nextDocumentId++}`,
+                        kind: 'macro',
+                        fileName: file.name,
+                        data
+                    });
+                } else {
+                    throw new Error(`${file.name} is not a recognized .macro or .category file.`);
+                }
             }
-            if (macro.m_name !== undefined && typeof macro.m_name !== 'string') {
-                throw new Error('The macro name must be text.');
+            saveActiveMacro();
+            openedDocuments.push(...incoming);
+            if (incoming.length) {
+                const first = incoming[0];
+                selectDocumentMacro(first.id, 0);
             }
-            if (macro.m_description !== undefined && typeof macro.m_description !== 'string') {
-                throw new Error('The macro description must be text.');
-            }
-            if (macro.m_enabled !== undefined && typeof macro.m_enabled !== 'boolean') {
-                throw new Error('The macro enabled setting must be true or false.');
-            }
-
-            const importedTriggers = importedBlocks(macro.m_triggerList, 'trigger');
-            const importedConstraints = importedBlocks(macro.m_constraintList, 'constraint');
-            const importedActions = importedBlocks(macro.m_actionList, 'action');
-            const macroName = macro.m_name || 'Massive Macro';
-
-            if (!confirm(`Import "${macroName}" and replace the macro currently in the editor?`)) return;
-
-            macroState.triggers = importedTriggers;
-            macroState.constraints = importedConstraints;
-            macroState.actions = importedActions;
-            document.getElementById('macroName').value = macroName;
-            document.getElementById('macroDescription').value = macro.m_description || '';
-            document.getElementById('macroEnabled').checked = macro.m_enabled ?? true;
-            renderWorkspace();
-            alert(`Imported "${macroName}".`);
+            if (incoming.length > 1) showToast(`Opened ${incoming.length} MacroDroid files.`);
         } catch (error) {
-            alert(`Unable to import this macro: ${error.message}`);
+            showToast(`Unable to open MacroDroid files: ${error.message}`, 'error');
         } finally {
             fileInput.value = '';
         }
