@@ -127,6 +127,7 @@
             color: var(--accent-color); background: #f4f9fb; cursor: pointer; font: inherit;
             font-size: 0.7rem; font-weight: 700;
         }
+        .file-explorer-add-group { display: flex; gap: 5px; }
         .file-explorer-add[hidden] { display: none; }
         .file-explorer-tree {
             display: flex; flex: 1; flex-direction: column; gap: 3px; min-height: 58px;
@@ -153,6 +154,13 @@
         }
         .file-tree-row.invalid .file-tree-icon { color: #c92a1c; }
         .file-tree-icon { flex: none; color: #71808b; font-size: 0.82rem; }
+        .file-tree-kind-icon {
+            width: 16px; height: 16px; flex: none; display: grid; place-items: center;
+            border-radius: 2px; color: #fff;
+        }
+        .file-tree-kind-icon.action-block { --file-tree-icon-background: #168fc9; background: var(--file-tree-icon-background); }
+        .file-tree-kind-icon.macro { --file-tree-icon-background: #c92a1c; background: var(--file-tree-icon-background); }
+        .file-tree-kind-icon svg { width: 12px; height: 12px; display: block; }
         .file-tree-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .file-tree-children {
             display: flex; flex-direction: column; gap: 2px; margin-left: 18px;
@@ -185,6 +193,7 @@
             border: 1px solid var(--border-color); border-radius: 6px; background: #fafbfc;
             color: #384957; font-size: 0.82rem; font-weight: 600;
         }
+        .macro-enabled[hidden] { display: none; }
         .macro-enabled input { margin-top: 2px; accent-color: #398365; }
         .macro-enabled span { display: flex; flex-direction: column; gap: 3px; }
         .macro-enabled small { color: var(--muted-color); font-size: 0.72rem; font-weight: 400; line-height: 1.4; }
@@ -206,6 +215,7 @@
             overflow: hidden; margin-bottom: 16px; border: 1px solid var(--workflow-border);
             border-radius: 12px; background: var(--workflow-tint);
         }
+        .workflow-section[hidden] { display: none; }
         .workflow-section.trigger {
             --workflow-color: #e34246; --workflow-tint: #f4c7c9; --workflow-border: #edb5b8;
         }
@@ -215,6 +225,37 @@
         .workflow-section.constraint {
             --workflow-color: #4caf50; --workflow-tint: #c5e2c6; --workflow-border: #b4d9b6;
         }
+        .workflow-section.variables {
+            --workflow-color: #168fc9; --workflow-tint: #b9dff0; --workflow-border: #a4d2e7;
+        }
+        .action-block-variable-list { display: flex; flex-direction: column; gap: 8px; padding: 12px; }
+        .action-block-variable-empty { padding: 8px; color: #52616b; text-align: center; }
+        .action-block-variable-row {
+            display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+            border: 1px solid rgba(34, 91, 120, 0.16); border-radius: 8px;
+            background: rgba(255, 255, 255, 0.62); color: #273943;
+        }
+        .action-block-variable-name { flex: 1; min-width: 0; overflow-wrap: anywhere; font-weight: 600; }
+        .action-block-variable-type { color: #596b77; font-size: 0.75rem; }
+        .action-block-variable-remove {
+            border: 0; border-radius: 5px; padding: 4px 8px; color: #8a5050;
+            background: transparent; cursor: pointer; font: inherit;
+        }
+        .action-block-variable-remove:hover { background: #fff0f0; }
+        .action-block-variable-form {
+            display: flex; align-items: end; flex-wrap: wrap; gap: 8px;
+            padding: 12px; border-top: 1px solid rgba(34, 91, 120, 0.16);
+        }
+        .action-block-variable-form label { display: flex; flex: 1 1 130px; flex-direction: column; gap: 4px; font-size: 0.75rem; }
+        .action-block-variable-form input, .action-block-variable-form select {
+            min-width: 0; padding: 8px; border: 1px solid var(--border-color); border-radius: 5px;
+            background: #fff; color: var(--text-color); font: inherit;
+        }
+        .action-block-variable-form button {
+            min-height: 34px; padding: 6px 10px; border: 1px solid var(--border-color);
+            border-radius: 5px; background: #fff; color: var(--text-color); cursor: pointer; font: inherit;
+        }
+        .action-block-variable-form button[type="submit"] { border-color: #168fc9; color: #fff; background: #168fc9; }
         .workflow-section-header {
             min-height: 66px; display: flex; align-items: center; gap: 12px;
             padding: 12px 16px; color: #fff; background: var(--workflow-color);
@@ -472,7 +513,7 @@
         .scene-editor-header p { margin: 4px 0 0; color: var(--muted-color); font-size: 0.78rem; }
         .scene-editor-body {
             min-height: 0; flex: 1; display: grid;
-            grid-template-columns: 270px minmax(280px, 1fr) 300px;
+            grid-template-columns: 270px minmax(280px, 1fr) 260px;
             grid-template-rows: minmax(0, 1fr); gap: 16px; padding: 18px; overflow: hidden;
         }
         .scene-settings, .scene-canvas-panel, .scene-components {
@@ -561,6 +602,25 @@
             display: flex; flex-direction: column; align-items: stretch; gap: 10px;
             transition: background-color 100ms ease;
         }
+        .scene-device-content.is-drop-target { outline: 2px dashed #245b78; outline-offset: -5px; }
+        .scene-preview-item { position: relative; cursor: grab; }
+        .scene-preview-item.is-selected { outline: 2px solid #3478a5; outline-offset: 2px; border-radius: 3px; }
+        .scene-preview-item.is-dragging { opacity: 0.4; }
+        .scene-preview-image { max-width: 100%; object-fit: contain; }
+        .scene-preview-icon { font-size: 2rem; line-height: 1; }
+        .scene-preview-progress { width: 100%; }
+        .scene-preview-web, .scene-preview-map { min-height: 64px; padding: 12px; border: 1px solid #bcc7cf; border-radius: 4px; color: #52616d; background: #f6f8f9; font-size: 0.72rem; overflow-wrap: anywhere; }
+        .scene-preview-layout { min-height: 34px; padding: 6px; border: 1px dashed #9aabb6; border-radius: 4px; color: #52616d; font-size: 0.68rem; }
+        .scene-preview-layout-children { display: flex; gap: 5px; margin-top: 5px; }
+        .scene-preview-layout-child { flex: 1; min-width: 0; padding: 5px; border: 1px solid #c5d0d7; border-radius: 3px; background: #fff; overflow-wrap: anywhere; }
+        .scene-inspector { display: flex; flex-direction: column; gap: 10px; }
+        .scene-inspector-empty { color: #697783; font-size: 0.76rem; line-height: 1.5; }
+        .scene-inspector .scene-field { margin-bottom: 0; }
+        .scene-inspector input[type="text"], .scene-inspector input[type="number"], .scene-inspector select, .scene-inspector textarea {
+            width: 100%; min-width: 0; padding: 8px 9px; border: 1px solid var(--border-color);
+            border-radius: 5px; color: var(--text-color); background: #fff; font: inherit; font-size: 0.78rem;
+        }
+        .scene-inspector textarea { min-height: 68px; resize: vertical; }
         .scene-preview-text { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 0.85rem; }
         .scene-preview-button {
             min-height: 38px; padding: 8px 12px; border: 0; border-radius: 4px;
@@ -632,6 +692,9 @@
         button { transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease, transform 140ms ease, box-shadow 140ms ease; }
         button:active { transform: translateY(1px); }
         .block { animation: block-enter 180ms ease-out both; }
+        .block[draggable="true"] { cursor: grab; }
+        .block.is-dragging { opacity: 0.45; cursor: grabbing; }
+        .section-dropzone.is-drop-target { outline: 2px dashed var(--workflow-color); outline-offset: -4px; }
         @keyframes block-enter { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         @media (max-width: 1100px) {
             header { padding: 12px 18px; }
@@ -647,7 +710,7 @@
             .scene-settings, .scene-canvas-panel, .scene-components {
                 min-height: auto; overflow: visible;
             }
-            .scene-component-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .scene-inspector { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
         @media (max-width: 820px) {
             .main-container { grid-template-columns: minmax(190px, 260px) minmax(0, 1fr); }
@@ -679,7 +742,7 @@
             }
             .scene-canvas-panel { min-height: 470px; }
             .scene-components { grid-column: auto; }
-            .scene-component-list { display: flex; }
+            .scene-inspector { display: flex; }
             .scene-device { min-height: 420px; }
         }
         @media (max-width: 420px) {
@@ -738,7 +801,10 @@
                             </div>
                         </details>
                     </div>
-                    <button class="file-explorer-add" id="addCategoryMacroButton" type="button" onclick="addEmptyCategoryMacro()" hidden>+ Macro</button>
+                    <div class="file-explorer-add-group">
+                        <button class="file-explorer-add" id="addCategoryMacroButton" type="button" onclick="addEmptyCategoryMacro()" hidden>+ Macro</button>
+                        <button class="file-explorer-add" id="addCategoryActionBlockButton" type="button" onclick="addEmptyCategoryActionBlock()" hidden>+ Action Block</button>
+                    </div>
                 </div>
                 <input id="documentImportFiles" type="file" accept=".macro,.category,.json,application/json" multiple hidden onchange="importDocuments(this)">
                 <div class="file-explorer-tree" id="fileExplorerTree" role="tree" aria-label="Opened MacroDroid files">
@@ -753,7 +819,7 @@
                     <h2>Workflow builder</h2>
                     <p>Configure the events, conditions, and tasks for this automation.</p>
                 </div>
-                <span class="workflow-hint">Run order: trigger &gt; conditions &gt; actions</span>
+                <span class="workflow-hint" id="workflowHint">Run order: trigger &gt; conditions &gt; actions. Drag blocks to reorder.</span>
             </div>
             <section class="workflow-section trigger" aria-labelledby="triggerStageTitle">
                 <div class="workflow-section-header">
@@ -773,6 +839,15 @@
                 <div id="constraintZone" class="section-dropzone"></div>
             </section>
 
+            <section class="workflow-section variables" id="actionBlockInputVariables" aria-labelledby="actionBlockInputTitle" hidden>
+                <div class="workflow-section-header">
+                    <h3 id="actionBlockInputTitle">Input Variables</h3>
+                    <span class="workflow-section-count" id="actionBlockInputCount">0</span>
+                    <button class="workflow-add-btn" type="button" aria-label="Add input variable" onclick="showActionBlockVariableForm('input')">+</button>
+                </div>
+                <div class="action-block-variable-list" id="actionBlockInputList"></div>
+            </section>
+
             <section class="workflow-section action" aria-labelledby="actionStageTitle">
                 <div class="workflow-section-header">
                     <h3 id="actionStageTitle">Actions</h3>
@@ -780,6 +855,24 @@
                     <button class="workflow-add-btn" type="button" aria-label="Add action" onclick="openPalette('action', this)">+</button>
                 </div>
                 <div id="actionZone" class="section-dropzone"></div>
+            </section>
+
+            <section class="workflow-section variables" id="actionBlockOutputVariables" aria-labelledby="actionBlockOutputTitle" hidden>
+                <div class="workflow-section-header">
+                    <h3 id="actionBlockOutputTitle">Output Variables</h3>
+                    <span class="workflow-section-count" id="actionBlockOutputCount">0</span>
+                    <button class="workflow-add-btn" type="button" aria-label="Add output variable" onclick="showActionBlockVariableForm('output')">+</button>
+                </div>
+                <div class="action-block-variable-list" id="actionBlockOutputList"></div>
+            </section>
+
+            <section class="workflow-section variables" id="actionBlockWorkingVariables" aria-labelledby="actionBlockWorkingTitle" hidden>
+                <div class="workflow-section-header">
+                    <h3 id="actionBlockWorkingTitle">Working Variables</h3>
+                    <span class="workflow-section-count" id="actionBlockWorkingCount">0</span>
+                    <button class="workflow-add-btn" type="button" aria-label="Add working variable" onclick="showActionBlockVariableForm('working')">+</button>
+                </div>
+                <div class="action-block-variable-list" id="actionBlockWorkingList"></div>
             </section>
         </div>
 
@@ -1016,15 +1109,17 @@
                     <p class="scene-editor-note">Private scenes are embedded in this action. Unrecognized scene settings are retained when editing.</p>
                 </section>
                 <section class="scene-canvas-panel">
-                    <p class="scene-canvas-caption">SCENE PREVIEW - DEVICE CANVAS</p>
+                    <p class="scene-canvas-caption">SCENE PREVIEW - SELECT AN ELEMENT TO EDIT IT; DRAG TO REORDER</p>
                     <div class="scene-device">
                         <div class="scene-device-status">9:41 | Wi-Fi | Battery 100%</div>
                         <div class="scene-device-content" id="scenePreview"></div>
                     </div>
                 </section>
                 <section class="scene-components">
-                    <h3 class="scene-panel-title">Scene components</h3>
-                    <div class="scene-component-list" id="sceneComponentList"></div>
+                    <h3 class="scene-panel-title">Selected element</h3>
+                    <div class="scene-inspector" id="sceneInspector">
+                        <p class="scene-inspector-empty">Select an element in the preview to edit it. Drag preview elements to change their order.</p>
+                    </div>
                     <div class="scene-add-grid" aria-label="Add scene component">
                         <button class="scene-add-btn" type="button" onclick="addSceneItem('text')">+ Text</button>
                         <button class="scene-add-btn" type="button" onclick="addSceneItem('button')">+ Button</button>
@@ -1032,7 +1127,21 @@
                         <button class="scene-add-btn" type="button" onclick="addSceneItem('checkbox')">+ Checkbox</button>
                         <button class="scene-add-btn" type="button" onclick="addSceneItem('input')">+ Text entry</button>
                         <button class="scene-add-btn" type="button" onclick="addSceneItem('slider')">+ Slider</button>
+                        <button class="scene-add-btn" type="button" onclick="addSceneItem('verticalSlider')">+ Vertical slider</button>
+                        <button class="scene-add-btn" type="button" onclick="addSceneItem('progress')">+ Progress</button>
+                        <button class="scene-add-btn" type="button" onclick="addSceneItem('dropdown')">+ Dropdown</button>
+                        <button class="scene-add-btn" type="button" onclick="addSceneItem('optionSelector')">+ Selectable list</button>
+                        <button class="scene-add-btn" type="button" onclick="addSceneItem('datePicker')">+ Date picker</button>
+                        <button class="scene-add-btn" type="button" onclick="addSceneItem('timePicker')">+ Time picker</button>
+                        <button class="scene-add-btn" type="button" onclick="addSceneItem('webView')">+ Web view</button>
+                        <button class="scene-add-btn" type="button" onclick="addSceneItem('mapView')">+ Map view</button>
+                        <button class="scene-add-btn" type="button" onclick="addSceneItem('image')">+ Image</button>
+                        <button class="scene-add-btn" type="button" onclick="addSceneItem('icon')">+ Icon</button>
+                        <button class="scene-add-btn" type="button" onclick="addSceneItem('spacer')">+ Spacer</button>
                         <button class="scene-add-btn" type="button" onclick="addSceneItem('divider')">+ Divider</button>
+                        <button class="scene-add-btn" type="button" onclick="addSceneItem('horizontalLayout')">+ Horizontal layout</button>
+                        <button class="scene-add-btn" type="button" onclick="addSceneItem('verticalLayout')">+ Vertical layout</button>
+                        <button class="scene-add-btn" type="button" onclick="addSceneItem('gridLayout')">+ Grid layout</button>
                     </div>
                 </section>
             </div>
@@ -1158,8 +1267,6 @@
                     },
                     itemList: { items: [] }
                 },
-                disableLogging: false,
-                m_constraintList: [],
                 m_isDisabled: false,
                 m_isOrCondition: false
             } },
@@ -1177,7 +1284,7 @@
             { classType: 'KillAppAction', name: 'Kill Background Process', defaults: { m_packageName: '' } },
             { classType: 'ClearClipboardAction', name: 'Clear Clipboard', defaults: {} },
             { classType: 'SetKeyboardAction', name: 'Set Default Keyboard', defaults: { m_imeId: '' } },
-            { classType: 'SetLockScreenAction', name: 'Lock Screen Now', defaults: {} },
+            { classType: 'ScreenOnAction', name: 'Lock Screen Now', defaults: { m_screenOff: true } },
             { classType: 'OpenAppShortcutAction', name: 'Open App Shortcut', defaults: {} },
             { classType: 'ControlSmartHomeAction', name: 'Control Smart Home Device', defaults: {} },
             { classType: 'StopMacroAction', name: 'Stop Macro Execution', defaults: {} },
@@ -1606,6 +1713,8 @@
     const macroState = { triggers: [], constraints: [], actions: [] };
     let currentEdit = null;
     let currentSceneEdit = null;
+    let selectedSceneItemIndex = -1;
+    let draggedWorkflowBlock = null;
     let activePaletteSection = null;
     let paletteReturnFocus = null;
     let openedDocuments = [];
@@ -1695,6 +1804,21 @@
         };
     }
 
+    function createEmptyActionBlock(name, guid) {
+        return {
+            isActionBlock: true,
+            m_name: name,
+            m_GUID: guid,
+            m_enabled: true,
+            m_completed: true,
+            m_description: '',
+            localVariables: [],
+            m_triggerList: [],
+            m_actionList: [],
+            m_constraintList: []
+        };
+    }
+
     function createNewDocument() {
         const name = document.getElementById('newDocumentName').value.trim();
         const isCategory = newDocumentKind === 'category';
@@ -1748,6 +1872,13 @@
     }
 
     function macroValidationError(macro) {
+        if (macro?.isActionBlock === true) {
+            if (Array.isArray(macro.m_triggerList) && macro.m_triggerList.length ||
+                Array.isArray(macro.m_constraintList) && macro.m_constraintList.length) {
+                return 'Action blocks cannot contain triggers or constraints.';
+            }
+            return Array.isArray(macro.m_actionList) ? '' : 'Action block actions are invalid.';
+        }
         if (!Array.isArray(macro?.m_triggerList) || macro.m_triggerList.length === 0) {
             return 'Add at least one trigger.';
         }
@@ -1771,8 +1902,10 @@
         const macroButton = document.querySelector('.sidebar-export');
         const categoryButton = document.getElementById('exportCategoryButton');
         const addButton = document.getElementById('addCategoryMacroButton');
+        const addActionBlockButton = document.getElementById('addCategoryActionBlockButton');
         const isCategory = activeDocument?.kind === 'category';
         addButton.hidden = !isCategory;
+        addActionBlockButton.hidden = !isCategory;
         categoryButton.hidden = !isCategory;
         const currentMacro = activeDocument
             ? getDocumentMacro(activeDocument, activeDocument.selectedMacroIndex || 0)
@@ -1885,7 +2018,7 @@
             m_classType: classType,
             name: name,
             schemaDriven,
-            m_SIGUID: Math.floor(Math.random() * 9000000000000000000) + 1000000000000000000,
+            m_SIGUID: 0,
             params: JSON.parse(JSON.stringify(defaults))
         };
         macroState[section + 's'].push(block);
@@ -1895,6 +2028,33 @@
     function removeBlock(section, index) {
         macroState[section + 's'].splice(index, 1);
         renderWorkspace();
+    }
+
+    function reorderWorkflowBlock(section, fromIndex, toIndex) {
+        const blocks = macroState[`${section}s`];
+        if (!Number.isInteger(fromIndex) || !Number.isInteger(toIndex) ||
+            fromIndex < 0 || fromIndex >= blocks.length || toIndex < 0 || toIndex >= blocks.length ||
+            fromIndex === toIndex) return;
+        const [block] = blocks.splice(fromIndex, 1);
+        blocks.splice(toIndex, 0, block);
+        renderWorkspace();
+    }
+
+    function handleWorkflowDrop(event, section, targetIndex = null) {
+        event.preventDefault();
+        const source = draggedWorkflowBlock;
+        if (!source || source.section !== section) return;
+        let insertIndex = targetIndex === null ? macroState[`${section}s`].length : targetIndex;
+        if (targetIndex !== null) {
+            const blockElement = event.target instanceof Element ? event.target.closest('.block') : null;
+            if (blockElement && event.clientY > blockElement.getBoundingClientRect().top + blockElement.offsetHeight / 2) {
+                insertIndex++;
+            }
+        }
+        const blocks = macroState[`${section}s`];
+        if (source.index < insertIndex) insertIndex--;
+        reorderWorkflowBlock(section, source.index, Math.max(0, Math.min(insertIndex, blocks.length - 1)));
+        draggedWorkflowBlock = null;
     }
 
     function parameterLabel(key) {
@@ -2673,12 +2833,21 @@
 
     function openSceneEditor(index) {
         const block = macroState.actions[index];
+        if (!block.params || typeof block.params !== 'object') block.params = {};
         currentSceneEdit = {
             index,
-            scene: JSON.parse(JSON.stringify(block.params.sceneDescription))
+            scene: JSON.parse(JSON.stringify(block.params.sceneDescription || createEmptySceneDescription()))
         };
+        if (!currentSceneEdit.scene.sceneConfig || typeof currentSceneEdit.scene.sceneConfig !== 'object') {
+            currentSceneEdit.scene.sceneConfig = createEmptySceneDescription().sceneConfig;
+        }
+        if (!currentSceneEdit.scene.itemList || !Array.isArray(currentSceneEdit.scene.itemList.items)) {
+            currentSceneEdit.scene.itemList = { items: [] };
+        }
+        selectedSceneItemIndex = -1;
         const sceneConfig = currentSceneEdit.scene.sceneConfig;
         normalizeSceneConfig(sceneConfig);
+        if (typeof sceneConfig.name !== 'string') sceneConfig.name = 'Scene 1';
         if (!sceneConfig.displayOption || typeof sceneConfig.displayOption !== 'object') {
             sceneConfig.displayOption = { type: 'Activity' };
         } else if (!sceneConfig.displayOption.type) {
@@ -2691,6 +2860,26 @@
         updateSceneDisplayControls(sceneConfig);
         renderSceneEditor();
         showAnimatedOverlay(document.getElementById('sceneEditorOverlay'));
+    }
+
+    function createEmptySceneDescription() {
+        return {
+            sceneConfig: {
+                name: 'Scene 1',
+                blockNextActions: false,
+                foregroundColor: -16777216,
+                backgroundColor: -1,
+                displayOption: { type: 'Activity' },
+                showOnLockScreen: false,
+                dismissOnBackPress: false,
+                dismissOnHomeTaskSwitch: false,
+                closeOnBackgroundTouch: false,
+                roundedCornerAmount: 0,
+                contentPadding: 8,
+                updateValuesOnSceneClose: false
+            },
+            itemList: { items: [] }
+        };
     }
 
     function normalizeSceneConfig(sceneConfig) {
@@ -2712,18 +2901,18 @@
             ['closeSceneOnBackgroundPress', sceneConfig, 'closeOnBackgroundTouch'],
             ['closeSceneOnTapOutside', option, 'closeOnOutsideTouch']
         ].forEach(([legacyKey, target, targetKey]) => moveLegacyOption(legacyKey, target, targetKey));
-        if (option.displayMode !== undefined) {
-            const modeAliases = {
-                SHOW_ACTIVITY: 'Activity',
-                ACTIVITY: 'Activity',
-                FULL_SCREEN: 'Activity',
-                SHOW_DIALOG: 'Dialog',
-                DIALOG: 'Dialog',
-                SHOW_OVERLAY: 'Overlay',
-                OVERLAY: 'Overlay'
-            };
-            const rawMode = String(option.displayMode).toUpperCase();
-            option.type = modeAliases[rawMode] || option.displayMode;
+        const modeAliases = {
+            SHOW_ACTIVITY: 'Activity',
+            ACTIVITY: 'Activity',
+            FULL_SCREEN: 'Activity',
+            DIALOG: 'Dialog',
+            SHOW_DIALOG: 'Dialog',
+            OVERLAY: 'Overlay',
+            SHOW_OVERLAY: 'Overlay'
+        };
+        const rawMode = option.type ?? option.displayMode;
+        if (rawMode !== undefined) {
+            option.type = modeAliases[String(rawMode).toUpperCase()] || rawMode;
             delete option.displayMode;
         }
         if (sceneConfig.cornerRadius !== undefined) {
@@ -2860,12 +3049,31 @@
     function saveSceneEditor() {
         if (!currentSceneEdit) return;
         const { index, scene } = currentSceneEdit;
-        if (!scene.sceneConfig.name.trim()) {
+        if (typeof scene.sceneConfig.name !== 'string' || !scene.sceneConfig.name.trim()) {
             showToast('Enter a name for this scene before saving.', 'error');
             document.getElementById('sceneName').focus();
             return;
         }
-        macroState.actions[index].params.sceneDescription = scene;
+        const invalidItem = scene.itemList.items.findIndex(item => !item || typeof item.type !== 'string' ||
+            !item.type ||
+            !Object.keys(item).some(key => (key === 'config' || key.endsWith('Config')) &&
+                item[key] && typeof item[key] === 'object' && !Array.isArray(item[key])));
+        if (invalidItem !== -1) {
+            showToast(`Scene element ${invalidItem + 1} is missing its type or configuration.`, 'error');
+            return;
+        }
+        scene.itemList.items.forEach(item => {
+            if (!Number.isFinite(item.guid)) item.guid = 0;
+        });
+        scene.sceneConfig.displayOption = {
+            ...(scene.sceneConfig.displayOption || {}),
+            type: scene.sceneConfig.displayOption?.type || 'Activity'
+        };
+        const action = macroState.actions[index];
+        action.params.sceneDescription = scene;
+        action.params.sharedSceneGuid = 0;
+        action.params.sharedSceneName = '';
+        action.params.sceneVariableBindings = {};
         closeSceneEditor();
         renderWorkspace();
     }
@@ -2940,29 +3148,33 @@
     }
 
     function getSceneItemText(item) {
-        const configKey = Object.keys(item).find(key => key.endsWith('Config'));
-        const config = configKey ? item[configKey] : {};
-        return config.text ?? config.hintText ?? '';
+        const config = getSceneItemConfig(item);
+        return config.text ?? config.hintText ?? config.url ?? '';
+    }
+
+    function getSceneItemConfig(item) {
+        const configKey = Object.keys(item).find(key => key === 'config' || key.endsWith('Config'));
+        return configKey && item[configKey] && typeof item[configKey] === 'object' ? item[configKey] : {};
     }
 
     function setSceneItemText(item, value) {
-        const configKey = Object.keys(item).find(key => key.endsWith('Config'));
-        if (configKey) {
-            const config = item[configKey];
-            if (item.type === 'SceneEditText') config.hintText = value;
-            else if (item.type !== 'SceneHorizontalDivider') config.text = value;
-        }
+        const config = getSceneItemConfig(item);
+        const key = Object.prototype.hasOwnProperty.call(config, 'hintText') ? 'hintText'
+            : Object.prototype.hasOwnProperty.call(config, 'url') && !Object.prototype.hasOwnProperty.call(config, 'text') ? 'url'
+                : 'text';
+        config[key] = value;
     }
 
     function nextSceneVariableName(prefix) {
         const usedNames = new Set();
-        currentSceneEdit.scene.itemList.items.forEach(item => {
-            const configKey = Object.keys(item).find(key => key.endsWith('Config'));
-            const config = configKey ? item[configKey] : {};
-            ['booleanVariable', 'stringVariable', 'numberVariable'].forEach(key => {
-                if (config[key]?.varName) usedNames.add(config[key].varName);
+        const collect = items => items.forEach(item => {
+            const config = getSceneItemConfig(item);
+            Object.values(config).forEach(value => {
+                if (value && typeof value === 'object' && typeof value.varName === 'string') usedNames.add(value.varName);
             });
+            if (Array.isArray(item.children)) collect(item.children);
         });
+        collect(currentSceneEdit.scene.itemList.items);
         let suffix = 1;
         while (usedNames.has(`${prefix}_${suffix}`)) suffix++;
         return `${prefix}_${suffix}`;
@@ -2973,12 +3185,17 @@
             switch: nextSceneVariableName('scene_switch'),
             checkbox: nextSceneVariableName('scene_checkbox'),
             input: nextSceneVariableName('scene_input'),
-            slider: nextSceneVariableName('scene_value')
+            slider: nextSceneVariableName('scene_value'),
+            list: nextSceneVariableName('scene_options'),
+            selected: nextSceneVariableName('scene_selected'),
+            date: nextSceneVariableName('scene_date'),
+            time: nextSceneVariableName('scene_time')
         };
+        const foreground = currentSceneEdit.scene.sceneConfig.foregroundColor ?? -16777216;
         const configByKind = {
             text: {
                 type: 'SceneText', key: 'sceneTextConfig',
-                config: { text: 'Text', textSize: '20', textColor: currentSceneEdit.scene.sceneConfig.foregroundColor, textAlignment: 'Start', padding: '8' }
+                config: { text: 'Text', textSize: '20', textColor: foreground, textAlignment: 'Start', htmlFormatting: false, padding: '8' }
             },
             button: {
                 type: 'SceneButton', key: 'sceneButtonConfig',
@@ -2986,40 +3203,103 @@
             },
             switch: {
                 type: 'SceneSwitch', key: 'sceneSwitchConfig',
-                config: { text: 'Switch', textSize: '16', textColor: currentSceneEdit.scene.sceneConfig.foregroundColor, alignment: 'Split', booleanVariable: { varName: variableNames.switch }, padding: '8' }
+                config: { text: 'Switch', textSize: '16', textColor: foreground, alignment: 'Split', booleanVariable: { varName: variableNames.switch }, padding: '8' }
             },
             checkbox: {
                 type: 'SceneCheckBox', key: 'sceneCheckBoxConfig',
-                config: { text: 'Checkbox', textSize: '16', textColor: currentSceneEdit.scene.sceneConfig.foregroundColor, alignment: 'Start', booleanVariable: { varName: variableNames.checkbox }, padding: '8' }
+                config: { text: 'Checkbox', textSize: '16', textColor: foreground, alignment: 'Start', booleanVariable: { varName: variableNames.checkbox }, padding: '8' }
             },
             input: {
                 type: 'SceneEditText', key: 'sceneEditTextConfig',
-                config: { hintText: 'Enter text', textSizeString: '16', textColor: currentSceneEdit.scene.sceneConfig.foregroundColor, showBorder: true, inputType: 'TEXT', stringVariable: { varName: variableNames.input }, padding: 12 }
+                config: { hintText: 'Enter text', textSizeString: '16', textColor: foreground, showBorder: true, inputType: 'TEXT', stringVariable: { varName: variableNames.input }, padding: 12 }
             },
             slider: {
                 type: 'SceneSlider', key: 'sceneSliderConfig',
-                config: { min: '0', max: '100', current: '50', stepSize: '1', textColor: currentSceneEdit.scene.sceneConfig.foregroundColor, alignment: 'Center', numberVariable: { varName: variableNames.slider }, padding: '8' }
+                config: { min: '0', max: '100', current: '50', stepSize: '1', textColor: foreground, alignment: 'Center', numberVariable: { varName: variableNames.slider }, padding: '8' }
+            },
+            verticalSlider: {
+                type: 'SceneVerticalSlider', key: 'sceneVerticalSliderConfig',
+                config: { min: '0', max: '100', current: '50', stepSize: '1', textColor: foreground, heightPercent: 50, valuePosition: 0, numberVariable: { varName: nextSceneVariableName('scene_vertical_value') }, padding: '8' }
+            },
+            progress: {
+                type: 'SceneProgressIndicator', key: 'sceneProgressIndicatorConfig',
+                config: { style: 0, indeterminate: true, min: '0', max: '100', current: '50', trackColor: -3355444, size: 100, thickness: 4, alignment: 'Center', padding: '16' }
+            },
+            dropdown: {
+                type: 'SceneDropDownSelection', key: 'sceneDropDownConfig',
+                config: { text: 'Choose an option', textSize: '16', textColor: foreground, showHeading: true, arrayVariable: { varName: variableNames.list }, stringOutputVariable: { varName: variableNames.selected }, padding: '8' }
+            },
+            optionSelector: {
+                type: 'SceneOptionSelector', key: 'sceneOptionSelectorConfig',
+                config: { textColor: foreground, textSize: '16', multiSelect: false, arrayVariable: { varName: variableNames.list }, stringOutputVariable: { varName: variableNames.selected }, padding: '8' }
+            },
+            datePicker: {
+                type: 'SceneDatePicker', key: 'sceneCalendarConfig',
+                config: { text: 'Select a date', textSize: '20', textColor: foreground, showBorder: true, dictionaryVariable: { varName: variableNames.date }, padding: '8' }
+            },
+            timePicker: {
+                type: 'SceneTimePicker', key: 'sceneTimePickerConfig',
+                config: { text: 'Select a time', textSize: '18', textColor: foreground, useAmPm: true, showBorder: true, dictionaryVariable: { varName: variableNames.time }, padding: '8' }
+            },
+            webView: {
+                type: 'SceneWebView', key: 'sceneWebViewConfig',
+                config: { url: 'https://example.com', width: 100, height: 50, enableJavaScript: true, enableSwipeNavigation: false, padding: '0' }
+            },
+            mapView: {
+                type: 'SceneMapView', key: 'sceneMapViewConfig',
+                config: { bindLocationToVariables: false, latitude: '0', longitude: '0', zoom: '13', mapType: 'DEFAULT', width: 100, height: 50, showZoomControls: true, showCompass: true, padding: '0' }
+            },
+            image: {
+                type: 'SceneImage', key: 'sceneImageConfig',
+                config: { width: 100, height: 30, alignment: 'Center', sceneImageData: { type: 'STATIC_FILE', imageUri: '' }, padding: '8' }
+            },
+            icon: {
+                type: 'SceneIcon', key: 'sceneIconConfig',
+                config: { size: 48, alignment: 'Center', tintEnabled: false, tintColor: foreground, sceneIconData: { imageUri: '' }, padding: '8' }
+            },
+            spacer: {
+                type: 'SceneSpacer', key: 'sceneSpacerConfig',
+                config: { widthDp: 16, heightDp: 24 }
             },
             divider: {
                 type: 'SceneHorizontalDivider', key: 'config',
                 config: { dividerColor: -3355444, dividerHeight: 1, padding: 8 }
+            },
+            horizontalLayout: {
+                type: 'SceneHorizontalLayout', key: 'sceneHorizontalLayoutConfig',
+                config: { alignment: 'Start' }, children: []
+            },
+            verticalLayout: {
+                type: 'SceneVerticalLayout', key: 'sceneVerticalLayoutConfig',
+                config: { alignment: 'Top' }, children: []
+            },
+            gridLayout: {
+                type: 'SceneGridLayout', key: 'sceneGridLayoutConfig',
+                config: { itemsPerRow: 2, rowHeight: 64 }, children: []
             }
         };
         const definition = configByKind[kind];
         if (!definition) throw new Error(`Unsupported scene component: ${kind}`);
-        return { type: definition.type, guid: 0, [definition.key]: definition.config };
+        return {
+            type: definition.type,
+            guid: 0,
+            [definition.key]: definition.config,
+            ...(definition.children ? { children: definition.children } : {})
+        };
     }
 
     function addSceneItem(kind) {
         if (!currentSceneEdit) return;
         const items = currentSceneEdit.scene.itemList.items;
         items.push(createSceneItem(kind));
+        selectedSceneItemIndex = items.length - 1;
         renderSceneEditor();
     }
 
     function removeSceneItem(index) {
         if (!currentSceneEdit) return;
         currentSceneEdit.scene.itemList.items.splice(index, 1);
+        selectedSceneItemIndex = Math.min(selectedSceneItemIndex, currentSceneEdit.scene.itemList.items.length - 1);
         renderSceneEditor();
     }
 
@@ -3029,53 +3309,239 @@
         renderScenePreview();
     }
 
+    function moveSceneItem(fromIndex, toIndex) {
+        const items = currentSceneEdit.scene.itemList.items;
+        if (fromIndex < 0 || fromIndex >= items.length || toIndex < 0 || toIndex >= items.length || fromIndex === toIndex) return;
+        const [item] = items.splice(fromIndex, 1);
+        items.splice(toIndex, 0, item);
+        if (selectedSceneItemIndex === fromIndex) selectedSceneItemIndex = toIndex;
+        else if (fromIndex < selectedSceneItemIndex && toIndex >= selectedSceneItemIndex) selectedSceneItemIndex--;
+        else if (fromIndex > selectedSceneItemIndex && toIndex <= selectedSceneItemIndex) selectedSceneItemIndex++;
+        renderSceneEditor();
+    }
+
     function renderSceneEditor() {
-        renderSceneComponents();
+        renderSceneInspector();
         renderScenePreview();
     }
 
-    function renderSceneComponents() {
-        const list = document.getElementById('sceneComponentList');
-        list.innerHTML = '';
+    function appendSceneInspectorField(container, labelText, value, type, onChange, options = []) {
+        const label = document.createElement('label');
+        label.className = 'scene-field';
+        const caption = document.createElement('span');
+        caption.textContent = labelText;
+        let control;
+        if (type === 'select') {
+            control = document.createElement('select');
+            options.forEach(option => {
+                const choice = document.createElement('option');
+                choice.value = option;
+                choice.textContent = option;
+                control.appendChild(choice);
+            });
+            control.value = value;
+        } else if (type === 'textarea') {
+            control = document.createElement('textarea');
+            control.value = value ?? '';
+        } else {
+            control = document.createElement('input');
+            control.type = type;
+            control.value = value ?? '';
+        }
+        control.addEventListener(type === 'color' ? 'input' : 'change', () => onChange(control.value));
+        if (type === 'text' || type === 'textarea') control.addEventListener('input', () => onChange(control.value));
+        label.append(caption, control);
+        container.appendChild(label);
+    }
+
+    function appendSceneInspectorToggle(container, labelText, checked, onChange) {
+        const row = document.createElement('div');
+        row.className = 'scene-check-row';
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.checked = checked;
+        input.addEventListener('change', () => onChange(input.checked));
+        const caption = document.createElement('label');
+        caption.textContent = labelText;
+        row.append(input, caption);
+        container.appendChild(row);
+    }
+
+    function renderSceneInspector() {
+        const inspector = document.getElementById('sceneInspector');
+        inspector.replaceChildren();
         const items = currentSceneEdit.scene.itemList.items;
-        items.forEach((item, index) => {
-            const card = document.createElement('div');
-            card.className = 'scene-component-card';
-            const head = document.createElement('div');
-            head.className = 'scene-component-card-head';
-            const title = document.createElement('strong');
-            title.textContent = item.type.replace(/^Scene/, '');
-            const remove = document.createElement('button');
-            remove.type = 'button';
-            remove.className = 'scene-remove-btn';
-            remove.textContent = 'Remove';
-            remove.addEventListener('click', () => removeSceneItem(index));
-            head.append(title, remove);
-            card.appendChild(head);
-            if (item.type !== 'SceneHorizontalDivider') {
-                const label = document.createElement('label');
-                label.className = 'scene-field';
-                const labelText = document.createElement('span');
-                labelText.textContent = item.type === 'SceneEditText' ? 'Hint text' : 'Label / content';
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.value = getSceneItemText(item);
-                input.addEventListener('input', () => updateSceneItemText(index, input.value));
-                label.append(labelText, input);
-                card.appendChild(label);
+        const item = items[selectedSceneItemIndex];
+        if (!item) {
+            const empty = document.createElement('p');
+            empty.className = 'scene-inspector-empty';
+            empty.textContent = 'Select an element in the preview to edit it. Drag preview elements to change their order.';
+            inspector.appendChild(empty);
+            return;
+        }
+        const config = getSceneItemConfig(item);
+        const update = (key, value) => {
+            config[key] = value;
+            renderScenePreview();
+        };
+        const contentKey = ['text', 'hintText', 'url'].find(key => Object.prototype.hasOwnProperty.call(config, key));
+        if (contentKey) {
+            appendSceneInspectorField(
+                inspector,
+                contentKey === 'hintText' ? 'Hint text' : contentKey === 'url' ? 'URL / HTML' : 'Text',
+                config[contentKey],
+                contentKey === 'url' ? 'textarea' : 'text',
+                value => { config[contentKey] = value; renderScenePreview(); }
+            );
+        }
+        const textColorTypes = new Set([
+            'SceneText', 'SceneButton', 'SceneSwitch', 'SceneCheckBox', 'SceneEditText',
+            'SceneSlider', 'SceneVerticalSlider', 'SceneDropDownSelection',
+            'SceneOptionSelector', 'SceneDatePicker', 'SceneTimePicker'
+        ]);
+        if (textColorTypes.has(item.type)) {
+            if (!Number.isFinite(config.textColor)) config.textColor = currentSceneEdit.scene.sceneConfig.foregroundColor ?? -16777216;
+            appendSceneInspectorField(inspector, 'Text colour', argbToHex(config.textColor), 'color', value => {
+                config.textColor = hexToArgb(value, argbAlpha(config.textColor));
+                renderScenePreview();
+            });
+        }
+        const alignmentDefaults = {
+            SceneText: ['textAlignment', 'Start'],
+            SceneButton: ['textAlignment', 'Center'],
+            SceneSwitch: ['alignment', 'Start'],
+            SceneCheckBox: ['alignment', 'Start'],
+            SceneSlider: ['alignment', 'Center'],
+            SceneImage: ['alignment', 'Start'],
+            SceneIcon: ['alignment', 'Start'],
+            SceneProgressIndicator: ['alignment', 'Center'],
+            SceneHorizontalLayout: ['alignment', 'Start'],
+            SceneVerticalLayout: ['alignment', 'Top']
+        };
+        const alignmentKey = Object.prototype.hasOwnProperty.call(config, 'textAlignment') ? 'textAlignment'
+            : Object.prototype.hasOwnProperty.call(config, 'alignment') ? 'alignment'
+                : alignmentDefaults[item.type]?.[0] || null;
+        if (alignmentKey) {
+            if (!config[alignmentKey]) config[alignmentKey] = alignmentDefaults[item.type]?.[1] || 'Start';
+            const choices = item.type === 'SceneVerticalLayout'
+                ? ['Top', 'Center', 'Bottom']
+                : ['Start', 'Center', 'End'];
+            if (config[alignmentKey] === 'Split') choices.push('Split');
+            appendSceneInspectorField(inspector, 'Alignment', config[alignmentKey], 'select', value => update(alignmentKey, value), choices);
+        }
+        if (item.type === 'SceneText' || Object.prototype.hasOwnProperty.call(config, 'htmlFormatting')) {
+            appendSceneInspectorToggle(inspector, 'HTML formatting', config.htmlFormatting === true, value => update('htmlFormatting', value));
+        }
+        if (config.sceneImageData || config.sceneIconData) {
+            const data = config.sceneImageData || config.sceneIconData;
+            appendSceneInspectorField(inspector, 'Image URI', data.imageUri || '', 'text', value => {
+                data.imageUri = value;
+                renderScenePreview();
+            });
+        }
+        ['min', 'max', 'current', 'width', 'height', 'size', 'heightPercent', 'widthDp', 'heightDp',
+            'itemsPerRow', 'rowHeight', 'thickness', 'dividerHeight'].forEach(key => {
+            if (Object.prototype.hasOwnProperty.call(config, key)) {
+                appendSceneInspectorField(inspector, key.replace(/[A-Z]/g, letter => ` ${letter.toLowerCase()}`), config[key], 'number', value => {
+                    if (value !== '' && Number.isFinite(Number(value))) update(key, key === 'min' || key === 'max' || key === 'current' ? value : Number(value));
+                });
             }
-            list.appendChild(card);
         });
+        ['latitude', 'longitude', 'zoom'].forEach(key => {
+            if (Object.prototype.hasOwnProperty.call(config, key)) {
+                appendSceneInspectorField(inspector, key[0].toUpperCase() + key.slice(1), config[key], 'text', value => update(key, value));
+            }
+        });
+        if (config.mapType !== undefined) {
+            appendSceneInspectorField(inspector, 'Map type', config.mapType, 'select', value => update('mapType', value), ['DEFAULT', 'SATELLITE', 'HYBRID', 'TERRAIN']);
+        }
+        ['enableJavaScript', 'enableSwipeNavigation', 'bindLocationToVariables', 'showMyLocation',
+            'showMyLocationButton', 'showZoomControls', 'showCompass', 'showBorder', 'useAmPm',
+            'showHeading', 'multiSelect', 'indeterminate'].forEach(key => {
+            if (typeof config[key] === 'boolean') {
+                const label = key.replace(/([A-Z])/g, ' $1').replace(/^./, letter => letter.toUpperCase());
+                appendSceneInspectorToggle(inspector, label, config[key], value => update(key, value));
+            }
+        });
+        Object.entries(config).forEach(([key, value]) => {
+            if (!value || typeof value !== 'object' || typeof value.varName !== 'string') return;
+            const fieldNames = {
+                booleanVariable: 'Boolean variable',
+                stringVariable: 'Text variable',
+                numberVariable: 'Number variable',
+                dictionaryVariable: 'Dictionary variable',
+                arrayVariable: 'Options array variable',
+                stringOutputVariable: 'Selected value variable',
+                keyOutputVariable: 'Selected key variable',
+                valuesArrayOutputVariable: 'Selected values array',
+                keysArrayOutputVariable: 'Selected keys array'
+            };
+            appendSceneInspectorField(inspector, fieldNames[key] || 'Variable name', value.varName, 'text', name => {
+                value.varName = name;
+                renderScenePreview();
+            });
+        });
+        if (item.type === 'SceneProgressIndicator') {
+            appendSceneInspectorField(inspector, 'Style', config.style === 1 ? 'Circular' : 'Linear', 'select', value => update('style', value === 'Circular' ? 1 : 0), ['Linear', 'Circular']);
+        }
+        if (item.type === 'SceneText' || item.type === 'SceneEditText' || config.text !== undefined) {
+            const note = document.createElement('p');
+            note.className = 'scene-settings-note';
+            note.textContent = 'Text supports MacroDroid magic text such as {lv=my_variable} and {v=my_variable}.';
+            inspector.appendChild(note);
+        }
+        if (item.type === 'SceneHorizontalLayout' || item.type === 'SceneVerticalLayout' || item.type === 'SceneGridLayout') {
+            if (!Array.isArray(item.children)) item.children = [];
+            const childNote = document.createElement('p');
+            childNote.className = 'scene-settings-note';
+            childNote.textContent = `${item.children.length} child element${item.children.length === 1 ? '' : 's'}`;
+            inspector.appendChild(childNote);
+            [['text', 'Add text'], ['button', 'Add button']].forEach(([kind, label]) => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'scene-add-btn';
+                button.textContent = label;
+                button.addEventListener('click', () => {
+                    item.children.push(createSceneItem(kind));
+                    renderSceneEditor();
+                });
+                inspector.appendChild(button);
+            });
+            item.children.forEach((child, childIndex) => {
+                const childConfig = getSceneItemConfig(child);
+                const childTextKey = Object.prototype.hasOwnProperty.call(childConfig, 'text') ? 'text' : 'hintText';
+                appendSceneInspectorField(inspector, `Child ${childIndex + 1} text`, childConfig[childTextKey] || '', 'text', value => {
+                    childConfig[childTextKey] = value;
+                    renderScenePreview();
+                });
+                const removeChild = document.createElement('button');
+                removeChild.type = 'button';
+                removeChild.className = 'scene-remove-btn';
+                removeChild.textContent = `Remove child ${childIndex + 1}`;
+                removeChild.addEventListener('click', () => {
+                    item.children.splice(childIndex, 1);
+                    renderSceneEditor();
+                });
+                inspector.appendChild(removeChild);
+            });
+        }
+        const remove = document.createElement('button');
+        remove.type = 'button';
+        remove.className = 'scene-remove-btn';
+        remove.textContent = 'Remove element';
+        remove.addEventListener('click', () => removeSceneItem(selectedSceneItemIndex));
+        inspector.appendChild(remove);
     }
 
     function renderScenePreview() {
         if (!currentSceneEdit) return;
         const config = currentSceneEdit.scene.sceneConfig;
         const preview = document.getElementById('scenePreview');
-        preview.innerHTML = '';
+        preview.replaceChildren();
         preview.style.backgroundColor = argbToRgba(config.backgroundColor ?? -1);
         preview.style.borderRadius = `${Number(config.roundedCornerAmount) || 0}px`;
         preview.style.padding = `${Number(config.contentPadding ?? 8)}px`;
+        document.querySelector('.scene-device-status').hidden = config.displayOption?.type === 'Activity';
         const items = currentSceneEdit.scene.itemList.items;
         if (items.length === 0) {
             const empty = document.createElement('div');
@@ -3084,13 +3550,30 @@
             preview.appendChild(empty);
             return;
         }
-        items.forEach(item => {
+        preview.ondragover = event => {
+            if (preview.dataset.dragIndex !== undefined && preview.dataset.dragIndex !== '') event.preventDefault();
+        };
+        preview.ondrop = event => {
+            event.preventDefault();
+            const fromIndex = Number(preview.dataset.dragIndex);
+            const target = event.target instanceof Element ? event.target.closest('[data-scene-index]') : null;
+            const toIndex = target ? Number(target.dataset.sceneIndex) : items.length - 1;
+            delete preview.dataset.dragIndex;
+            preview.classList.remove('is-drop-target');
+            moveSceneItem(fromIndex, toIndex);
+        };
+        preview.ondragenter = () => preview.classList.add('is-drop-target');
+        preview.ondragleave = event => {
+            if (!preview.contains(event.relatedTarget)) preview.classList.remove('is-drop-target');
+        };
+        items.forEach((item, index) => {
             const text = getSceneItemText(item);
+            const itemConfig = getSceneItemConfig(item);
             let element;
             if (item.type === 'SceneText') {
                 element = document.createElement('div');
                 element.className = 'scene-preview-text';
-                element.style.color = argbToHex(config.foregroundColor ?? -16777216);
+                element.style.color = argbToHex(itemConfig.textColor ?? config.foregroundColor ?? -16777216);
                 element.textContent = text;
             } else if (item.type === 'SceneButton') {
                 element = document.createElement('button');
@@ -3114,15 +3597,121 @@
                 element = document.createElement('input');
                 element.className = 'scene-preview-slider';
                 element.type = 'range';
-                element.min = '0';
-                element.max = '100';
-                element.value = '50';
+                element.min = itemConfig.min ?? '0';
+                element.max = itemConfig.max ?? '100';
+                element.value = itemConfig.current ?? '50';
                 element.disabled = true;
+            } else if (item.type === 'SceneVerticalSlider') {
+                element = document.createElement('input');
+                element.type = 'range';
+                element.min = itemConfig.min ?? '0';
+                element.max = itemConfig.max ?? '100';
+                element.value = itemConfig.current ?? '50';
+                element.disabled = true;
+                element.style.cssText = 'height:120px; writing-mode:vertical-lr; direction:rtl; align-self:center;';
+            } else if (item.type === 'SceneProgressIndicator') {
+                element = document.createElement(itemConfig.style === 1 ? 'div' : 'progress');
+                element.className = 'scene-preview-progress';
+                if (itemConfig.style === 1) {
+                    element.textContent = itemConfig.indeterminate ? '◌' : `${itemConfig.current ?? 50}%`;
+                    element.style.cssText = 'width:56px;height:56px;border:5px solid #d5dce1;border-top-color:#245b78;border-radius:50%;text-align:center;line-height:46px;align-self:center;';
+                } else {
+                    element.max = itemConfig.max ?? '100';
+                    if (!itemConfig.indeterminate) element.value = itemConfig.current ?? '50';
+                }
+            } else if (item.type === 'SceneDropDownSelection' || item.type === 'SceneOptionSelector') {
+                element = document.createElement('div');
+                element.className = 'scene-preview-input';
+                element.textContent = `${text || item.type.replace(/^Scene/, '')} (options from variable)`;
+            } else if (item.type === 'SceneDatePicker' || item.type === 'SceneTimePicker') {
+                element = document.createElement('input');
+                element.className = 'scene-preview-input';
+                element.type = item.type === 'SceneDatePicker' ? 'date' : 'time';
+                element.disabled = true;
+                element.setAttribute('aria-label', text || 'Scene picker');
+            } else if (item.type === 'SceneWebView') {
+                element = document.createElement('div');
+                element.className = 'scene-preview-web';
+                element.textContent = itemConfig.url || 'Web view URL / HTML';
+            } else if (item.type === 'SceneMapView') {
+                element = document.createElement('div');
+                element.className = 'scene-preview-map';
+                element.textContent = `Map view · ${itemConfig.latitude ?? '0'}, ${itemConfig.longitude ?? '0'}`;
+            } else if (item.type === 'SceneImage' || item.type === 'SceneIcon') {
+                const uri = itemConfig.sceneImageData?.imageUri || itemConfig.sceneIconData?.imageUri;
+                if (uri) {
+                    element = document.createElement('img');
+                    element.src = uri;
+                    element.alt = item.type === 'SceneIcon' ? 'Scene icon' : 'Scene image';
+                } else {
+                    element = document.createElement('div');
+                    element.textContent = item.type === 'SceneIcon' ? 'Icon (set image URI)' : 'Image (set image URI)';
+                }
+                element.className = item.type === 'SceneIcon' ? 'scene-preview-icon' : 'scene-preview-image';
             } else if (item.type === 'SceneHorizontalDivider') {
                 element = document.createElement('div');
                 element.className = 'scene-preview-divider';
+            } else if (item.type === 'SceneSpacer') {
+                element = document.createElement('div');
+                element.style.height = `${Math.min(120, Number(itemConfig.heightDp) || 16)}px`;
+                element.style.width = `${Math.min(240, Number(itemConfig.widthDp) || 16)}px`;
+            } else if (item.type.endsWith('Layout')) {
+                element = document.createElement('div');
+                element.className = 'scene-preview-layout';
+                const title = document.createElement('div');
+                const children = Array.isArray(item.children) ? item.children : [];
+                title.textContent = `${item.type.replace(/^Scene/, '')} (${children.length} children)`;
+                element.appendChild(title);
+                if (children.length) {
+                    const childList = document.createElement('div');
+                    childList.className = 'scene-preview-layout-children';
+                    if (item.type === 'SceneVerticalLayout') childList.style.flexDirection = 'column';
+                    if (item.type === 'SceneGridLayout') childList.style.flexWrap = 'wrap';
+                    children.forEach(child => {
+                        const childPreview = document.createElement('div');
+                        childPreview.className = 'scene-preview-layout-child';
+                        childPreview.textContent = getSceneItemText(child) || child.type.replace(/^Scene/, '');
+                        childList.appendChild(childPreview);
+                    });
+                    element.appendChild(childList);
+                }
             }
-            if (element) preview.appendChild(element);
+            if (!element) return;
+            element.dataset.sceneIndex = index;
+            element.draggable = true;
+            element.classList.add('scene-preview-item');
+            if (index === selectedSceneItemIndex) element.classList.add('is-selected');
+            if (typeof itemConfig.textColor === 'number') element.style.color = argbToHex(itemConfig.textColor);
+            const alignment = itemConfig.textAlignment ?? itemConfig.alignment;
+            if (alignment) element.style.textAlign = alignment === 'Start' ? 'left' : alignment === 'End' ? 'right' : alignment.toLowerCase();
+            element.addEventListener('click', event => {
+                event.stopPropagation();
+                selectedSceneItemIndex = index;
+                renderSceneEditor();
+            });
+            element.addEventListener('dragstart', event => {
+                selectedSceneItemIndex = index;
+                preview.dataset.dragIndex = index;
+                element.classList.add('is-dragging');
+                event.dataTransfer.effectAllowed = 'move';
+                event.dataTransfer.setData('text/plain', String(index));
+            });
+            element.addEventListener('dragend', () => {
+                delete preview.dataset.dragIndex;
+                element.classList.remove('is-dragging');
+                preview.classList.remove('is-drop-target');
+            });
+            element.addEventListener('dragover', event => event.preventDefault());
+            element.addEventListener('drop', event => {
+                event.preventDefault();
+                event.stopPropagation();
+                const fromIndex = Number(preview.dataset.dragIndex);
+                const rect = element.getBoundingClientRect();
+                const toIndex = event.clientY > rect.top + rect.height / 2 ? index + 1 : index;
+                delete preview.dataset.dragIndex;
+                moveSceneItem(fromIndex, Math.max(0, Math.min(items.length - 1, toIndex > fromIndex ? toIndex - 1 : toIndex)));
+            });
+            preview.appendChild(element);
         });
     }
 
@@ -3166,8 +3755,12 @@
     function getSummary(block) {
         if (block.m_classType === 'CustomSceneAction') {
             const scene = block.params.sceneDescription;
+            if (!scene?.sceneConfig || !Array.isArray(scene.itemList?.items)) {
+                return block.params.sharedSceneGuid ? `Linked scene: ${block.params.sharedSceneName || 'Shared scene'} | Edit settings`
+                    : 'Scene not configured | Edit settings';
+            }
             const config = scene.sceneConfig;
-            return `Scene: ${config.name} | ${scene.itemList.items.length} component${scene.itemList.items.length === 1 ? '' : 's'}${config.blockNextActions ? ' | Wait until closed' : ''}`;
+            return `Scene: ${config.name || 'Scene 1'} | ${scene.itemList.items.length} component${scene.itemList.items.length === 1 ? '' : 's'}${config.blockNextActions ? ' | Wait until closed' : ''}`;
         }
         if (block.schemaDriven) {
             const count = Object.keys(block.params).length;
@@ -3187,6 +3780,28 @@
     }
 
     function renderWorkspace() {
+        const isActionBlock = activeMacroRaw?.isActionBlock === true;
+        document.getElementById('triggerZone').closest('.workflow-section').hidden = isActionBlock;
+        document.getElementById('constraintZone').closest('.workflow-section').hidden = isActionBlock;
+        document.getElementById('actionBlockInputVariables').hidden = !isActionBlock;
+        document.getElementById('actionBlockOutputVariables').hidden = !isActionBlock;
+        document.getElementById('actionBlockWorkingVariables').hidden = !isActionBlock;
+        document.getElementById('workflowHint').hidden = isActionBlock;
+        document.querySelector('.workspace-intro h2').textContent = isActionBlock ? 'Action block editor' : 'Workflow builder';
+        document.querySelector('.workspace-intro p').textContent = isActionBlock
+            ? 'Configure the variables and actions for this reusable action block.'
+            : 'Configure the events, conditions, and tasks for this automation.';
+        document.querySelector('.settings-panel .sidebar-heading h2').textContent =
+            isActionBlock ? 'Action block settings' : 'Macro settings';
+        document.querySelector('.settings-panel .sidebar-heading p').textContent = isActionBlock
+            ? 'Set the action block name and description.'
+            : "Edit the selected macro's settings, then export it or its category.";
+        document.querySelector('.macro-enabled').hidden = isActionBlock;
+        document.getElementById('macroDescription').placeholder = isActionBlock
+            ? 'Describe what this action block does...'
+            : 'Describe what this macro does...';
+        renderActionBlockVariables();
+
         const markBySection = { trigger: '□', constraint: '✓', action: '▤' };
         const countBySection = {
             trigger: 'workflowTriggerCount',
@@ -3197,6 +3812,19 @@
             const container = document.getElementById(sec + 'Zone');
             const items = macroState[sec + 's'];
             container.innerHTML = '';
+            container.ondragover = event => {
+                if (draggedWorkflowBlock?.section === sec) {
+                    event.preventDefault();
+                    container.classList.add('is-drop-target');
+                }
+            };
+            container.ondragleave = event => {
+                if (!container.contains(event.relatedTarget)) container.classList.remove('is-drop-target');
+            };
+            container.ondrop = event => {
+                container.classList.remove('is-drop-target');
+                handleWorkflowDrop(event, sec);
+            };
             document.getElementById(countBySection[sec]).textContent = items.length;
 
             if (items.length === 0) {
@@ -3210,6 +3838,26 @@
             items.forEach((b, i) => {
                 const blockDiv = document.createElement('div');
                 blockDiv.className = `block ${sec}`;
+                blockDiv.draggable = true;
+                blockDiv.dataset.index = i;
+                blockDiv.addEventListener('dragstart', event => {
+                    draggedWorkflowBlock = { section: sec, index: i };
+                    blockDiv.classList.add('is-dragging');
+                    event.dataTransfer.effectAllowed = 'move';
+                    event.dataTransfer.setData('text/plain', `${sec}:${i}`);
+                });
+                blockDiv.addEventListener('dragend', () => {
+                    draggedWorkflowBlock = null;
+                    blockDiv.classList.remove('is-dragging');
+                    container.classList.remove('is-drop-target');
+                });
+                blockDiv.addEventListener('dragover', event => {
+                    if (draggedWorkflowBlock?.section === sec) event.preventDefault();
+                });
+                blockDiv.addEventListener('drop', event => {
+                    container.classList.remove('is-drop-target');
+                    handleWorkflowDrop(event, sec, i);
+                });
 
                 const mark = document.createElement('span');
                 mark.className = 'block-mark';
@@ -3260,6 +3908,7 @@
     }
 
     function serializeCurrentMacro() {
+        const isActionBlock = activeMacroRaw?.isActionBlock === true;
         return {
             ...(activeMacroRaw || {
                 aiGenerated: 1,
@@ -3280,10 +3929,138 @@
             m_description: document.getElementById('macroDescription').value,
             m_enabled: document.getElementById('macroEnabled').checked,
             m_completed: true,
-            m_triggerList: buildBlockList(macroState.triggers),
+            m_triggerList: isActionBlock ? [] : buildBlockList(macroState.triggers),
             m_actionList: buildBlockList(macroState.actions),
-            m_constraintList: buildBlockList(macroState.constraints)
+            m_constraintList: isActionBlock ? [] : buildBlockList(macroState.constraints)
         };
+    }
+
+    const actionBlockVariableTypes = [
+        { value: 0, label: 'Boolean' },
+        { value: 1, label: 'Integer' },
+        { value: 2, label: 'String' },
+        { value: 3, label: 'Decimal' },
+        { value: 4, label: 'Dictionary' },
+        { value: 5, label: 'Array' },
+        { value: 6, label: 'Color' }
+    ];
+
+    function renderActionBlockVariables() {
+        const variables = Array.isArray(activeMacroRaw?.localVariables) ? activeMacroRaw.localVariables : [];
+        const sections = {
+            input: { list: 'actionBlockInputList', count: 'actionBlockInputCount' },
+            output: { list: 'actionBlockOutputList', count: 'actionBlockOutputCount' },
+            working: { list: 'actionBlockWorkingList', count: 'actionBlockWorkingCount' }
+        };
+        Object.entries(sections).forEach(([section, ids]) => {
+            const list = document.getElementById(ids.list);
+            const entries = variables.map((variable, index) => ({ variable, index }))
+                .filter(({ variable }) => {
+                    if (section === 'input') return variable.supportsInput === true;
+                    if (section === 'output') return variable.supportsOutput === true;
+                    return variable.supportsInput !== true && variable.supportsOutput !== true;
+                });
+            document.getElementById(ids.count).textContent = entries.length;
+            list.replaceChildren();
+            if (!entries.length) {
+                const empty = document.createElement('div');
+                empty.className = 'action-block-variable-empty';
+                empty.textContent = 'No Variables';
+                list.appendChild(empty);
+                return;
+            }
+            entries.forEach(({ variable, index }) => {
+                const row = document.createElement('div');
+                row.className = 'action-block-variable-row';
+                const name = document.createElement('span');
+                name.className = 'action-block-variable-name';
+                name.textContent = variable.m_name || 'Unnamed variable';
+                const type = document.createElement('span');
+                type.className = 'action-block-variable-type';
+                type.textContent = actionBlockVariableTypes.find(option => option.value === variable.m_type)?.label || 'Unknown type';
+                const remove = document.createElement('button');
+                remove.type = 'button';
+                remove.className = 'action-block-variable-remove';
+                remove.textContent = '×';
+                remove.setAttribute('aria-label', `Delete variable ${variable.m_name || 'Unnamed variable'}`);
+                remove.addEventListener('click', () => {
+                    activeMacroRaw.localVariables.splice(index, 1);
+                    saveActiveMacro();
+                    renderWorkspace();
+                });
+                row.append(name, type, remove);
+                list.appendChild(row);
+            });
+        });
+    }
+
+    function showActionBlockVariableForm(section) {
+        if (activeMacroRaw?.isActionBlock !== true) return;
+        if (!Array.isArray(activeMacroRaw.localVariables)) activeMacroRaw.localVariables = [];
+        const listId = {
+            input: 'actionBlockInputList',
+            output: 'actionBlockOutputList',
+            working: 'actionBlockWorkingList'
+        }[section];
+        const list = document.getElementById(listId);
+        list.querySelector('.action-block-variable-form')?.remove();
+        const form = document.createElement('form');
+        form.className = 'action-block-variable-form';
+        const nameLabel = document.createElement('label');
+        nameLabel.textContent = 'Name';
+        const nameInput = document.createElement('input');
+        nameInput.type = 'text';
+        nameInput.required = true;
+        nameInput.maxLength = 100;
+        nameInput.autocomplete = 'off';
+        nameLabel.appendChild(nameInput);
+        const typeLabel = document.createElement('label');
+        typeLabel.textContent = 'Type';
+        const typeSelect = document.createElement('select');
+        actionBlockVariableTypes.forEach(option => {
+            const choice = document.createElement('option');
+            choice.value = String(option.value);
+            choice.textContent = option.label;
+            typeSelect.appendChild(choice);
+        });
+        typeLabel.appendChild(typeSelect);
+        const cancel = document.createElement('button');
+        cancel.type = 'button';
+        cancel.textContent = 'Cancel';
+        cancel.addEventListener('click', () => form.remove());
+        const save = document.createElement('button');
+        save.type = 'submit';
+        save.textContent = 'Add variable';
+        form.append(nameLabel, typeLabel, cancel, save);
+        form.addEventListener('submit', event => {
+            event.preventDefault();
+            const name = nameInput.value.trim();
+            if (!name) return;
+            if (activeMacroRaw.localVariables.some(variable => variable.m_name === name)) {
+                showToast(`A variable named "${name}" already exists in this action block.`, 'error');
+                nameInput.focus();
+                return;
+            }
+            const type = Number(typeSelect.value);
+            const variable = {
+                m_name: name,
+                m_type: type,
+                isLocalVar: true,
+                supportsInput: section === 'input',
+                supportsOutput: section === 'output'
+            };
+            if (type === 0) variable.m_booleanValue = false;
+            else if (type === 1 || type === 6) variable.m_intValue = 0;
+            else if (type === 2) variable.m_stringValue = '';
+            else if (type === 3) variable.m_decimalValue = 0;
+            else variable.dictionary = { entries: [], isArray: type === 5 };
+            activeMacroRaw.localVariables.push(variable);
+            form.remove();
+            saveActiveMacro();
+            renderWorkspace();
+        });
+        list.appendChild(form);
+        nameInput.focus();
     }
 
     function saveActiveMacro() {
@@ -3299,9 +4076,18 @@
 
     function loadMacroIntoEditor(rawMacro) {
         activeMacroRaw = JSON.parse(JSON.stringify(rawMacro));
-        macroState.triggers = importedBlocks(activeMacroRaw.m_triggerList || [], 'trigger');
-        macroState.constraints = importedBlocks(activeMacroRaw.m_constraintList || [], 'constraint');
+        if (activeMacroRaw.isActionBlock === true && !Array.isArray(activeMacroRaw.localVariables)) {
+            activeMacroRaw.localVariables = [];
+        }
+        macroState.triggers = activeMacroRaw.isActionBlock === true
+            ? []
+            : importedBlocks(activeMacroRaw.m_triggerList || [], 'trigger');
+        macroState.constraints = activeMacroRaw.isActionBlock === true
+            ? []
+            : importedBlocks(activeMacroRaw.m_constraintList || [], 'constraint');
         macroState.actions = importedBlocks(activeMacroRaw.m_actionList || [], 'action');
+        document.querySelector('label[for="macroName"] .field-label').textContent =
+            activeMacroRaw.isActionBlock === true ? 'Action block name' : 'Macro name';
         document.getElementById('macroName').value = activeMacroRaw.m_name || 'Macro';
         document.getElementById('macroDescription').value = activeMacroRaw.m_description || '';
         document.getElementById('macroEnabled').checked = activeMacroRaw.m_enabled ?? true;
@@ -3330,6 +4116,7 @@
                 document.getElementById('macroName').value = '';
                 document.getElementById('macroDescription').value = '';
                 document.getElementById('macroEnabled').checked = true;
+                document.querySelector('label[for="macroName"] .field-label').textContent = 'Macro name';
                 renderWorkspace();
             }
         } else {
@@ -3351,9 +4138,9 @@
             row.setAttribute('aria-label', `${label}. Incomplete macro.`);
         }
         const iconElement = document.createElement('span');
-        iconElement.className = 'file-tree-icon';
         iconElement.setAttribute('aria-hidden', 'true');
-        iconElement.textContent = icon;
+        iconElement.className = `file-tree-kind-icon ${options.actionBlock ? 'action-block' : 'macro'}`;
+        iconElement.innerHTML = '<svg viewBox="0 0 16 16" focusable="false"><path fill="currentColor" d="M3 1.5h7.3L13 4.2v10.3H3z"/><path fill="var(--file-tree-icon-background)" d="M10 1.7v2.8h2.8z"/><path stroke="var(--file-tree-icon-background)" stroke-linecap="round" stroke-width=".8" d="M5 7h6M5 9h6M5 11h4"/></svg>';
         const labelElement = document.createElement('span');
         labelElement.className = 'file-tree-label';
         labelElement.textContent = label;
@@ -3371,6 +4158,22 @@
         remove.addEventListener('click', event => {
             event.stopPropagation();
             removeOpenedDocument(documentRecord.id);
+        });
+        container.appendChild(remove);
+    }
+
+    function addCategoryMacroRemoveButton(container, documentRecord, macroIndex) {
+        const remove = document.createElement('button');
+        remove.type = 'button';
+        remove.className = 'file-tree-remove';
+        remove.textContent = '×';
+        const entry = documentRecord.data.macros[macroIndex];
+        const kind = entry.isActionBlock === true ? 'action block' : 'macro';
+        remove.setAttribute('aria-label', `Delete ${entry.m_name || `Macro ${macroIndex + 1}`}`);
+        remove.title = `Delete ${kind} from category`;
+        remove.addEventListener('click', event => {
+            event.stopPropagation();
+            removeCategoryMacro(documentRecord.id, macroIndex);
         });
         container.appendChild(remove);
     }
@@ -3401,6 +4204,7 @@
                     ? document.getElementById('macroName').value || documentRecord.fileName
                     : documentRecord.data.macro.m_name || documentRecord.fileName, {
                     selected: isActive,
+                    actionBlock: documentRecord.data.macro.isActionBlock === true,
                     invalid: Boolean(validationError),
                     validationError,
                     onClick: () => selectDocumentMacro(documentRecord.id)
@@ -3443,11 +4247,16 @@
                         : macro.m_name || `Macro ${index + 1}`, {
                         child: true,
                         selected: isActive,
+                        actionBlock: macro.isActionBlock === true,
                         invalid: Boolean(validationError),
                         validationError,
                         onClick: () => selectDocumentMacro(documentRecord.id, index)
                     });
-                    children.appendChild(row);
+                    const entry = document.createElement('div');
+                    entry.className = 'file-tree-macro-entry';
+                    entry.appendChild(row);
+                    addCategoryMacroRemoveButton(entry, documentRecord, index);
+                    children.appendChild(entry);
                 });
                 if (!documentRecord.data.macros.length) {
                     const empty = document.createElement('div');
@@ -3468,14 +4277,66 @@
         const macros = activeDocument.data.macros;
         const existingGuids = macros.map(macro => macro.m_GUID).filter(Number.isFinite);
         const nextGuid = existingGuids.length ? Math.max(...existingGuids) + 1 : 0;
+        const macroCount = macros.filter(macro => macro.isActionBlock !== true).length;
         const newMacro = createEmptyMacro(
-            `Macro ${macros.length + 1}`,
+            `Macro ${macroCount + 1}`,
             activeDocument.data.categoryName || 'Uncategorized',
             nextGuid
         );
         macros.push(newMacro);
         selectDocumentMacro(activeDocument.id, macros.length - 1);
         showToast('Added an empty macro to the category. Add a trigger and an action before exporting.');
+    }
+
+    function addEmptyCategoryActionBlock() {
+        if (activeDocument?.kind !== 'category') return;
+        saveActiveMacro();
+        const macros = activeDocument.data.macros;
+        const existingGuids = macros.map(macro => macro.m_GUID).filter(Number.isFinite);
+        const nextGuid = Math.max(Date.now(), ...(existingGuids.length ? existingGuids : [0])) + 1;
+        const actionBlockCount = macros.filter(macro => macro.isActionBlock === true).length;
+        macros.push(createEmptyActionBlock(`Action Block ${actionBlockCount + 1}`, nextGuid));
+        selectDocumentMacro(activeDocument.id, macros.length - 1);
+        showToast('Added an action block. Add its actions in the workflow builder.');
+    }
+
+    function removeCategoryMacro(documentId, macroIndex) {
+        const documentRecord = openedDocuments.find(entry => entry.id === documentId);
+        if (!documentRecord || documentRecord.kind !== 'category' ||
+            !Number.isInteger(macroIndex) || macroIndex < 0 || macroIndex >= documentRecord.data.macros.length) return;
+
+        const wasActiveCategory = activeDocument?.id === documentId;
+        const previousSelectedIndex = documentRecord.selectedMacroIndex;
+        if (wasActiveCategory) {
+            saveActiveMacro();
+            activeDocument = null;
+            activeMacroRaw = null;
+        }
+        documentRecord.data.macros.splice(macroIndex, 1);
+
+        if (wasActiveCategory) {
+            const nextIndex = documentRecord.data.macros.length
+                ? Math.max(0, Math.min(
+                    macroIndex < previousSelectedIndex ? previousSelectedIndex - 1
+                        : macroIndex === previousSelectedIndex ? macroIndex : previousSelectedIndex,
+                    documentRecord.data.macros.length - 1
+                ))
+                : 0;
+            selectDocumentMacro(documentId, nextIndex);
+        } else {
+            renderFileExplorer();
+            updateExportButtons();
+        }
+        showToast(`${kind[0].toUpperCase()}${kind.slice(1)} deleted from category.`);
+    }
+
+    function isEmptyHideAllScenesMacro(macro) {
+        return macro?.isActionBlock !== true &&
+            typeof macro?.m_name === 'string' &&
+            macro.m_name.trim().toLowerCase() === 'hide all scenes' &&
+            ['m_triggerList', 'm_actionList', 'm_constraintList', 'localVariables'].every(key =>
+                macro[key] === undefined || Array.isArray(macro[key]) && macro[key].length === 0
+            );
     }
 
     function removeOpenedDocument(documentId) {
@@ -3492,6 +4353,7 @@
             document.getElementById('macroName').value = 'Massive Macro';
             document.getElementById('macroDescription').value = '';
             document.getElementById('macroEnabled').checked = true;
+            document.querySelector('label[for="macroName"] .field-label').textContent = 'Macro name';
             document.getElementById('exportCategoryButton').hidden = true;
             document.getElementById('addCategoryMacroButton').hidden = true;
             if (openedDocuments.length) {
@@ -3570,14 +4432,19 @@
                 throw new Error(`The ${section} at position ${index + 1} is invalid.`);
             }
 
-            const { m_classType, m_SIGUID, ...params } = item;
+            const { m_classType: sourceClassType, m_SIGUID, ...params } = item;
+            const m_classType = section === 'action' && sourceClassType === 'SetLockScreenAction'
+                ? 'ScreenOnAction'
+                : sourceClassType;
+            if (section === 'action' && sourceClassType === 'SetLockScreenAction') params.m_screenOff = true;
+            if (section === 'action' && m_classType === 'CustomSceneAction') delete params.disableLogging;
             const catalogItem = masterCatalogs[section].find(entry => entry.classType === m_classType);
             return {
                 section,
                 m_classType,
-                name: catalogItem?.name || m_classType,
+                name: sourceClassType === 'SetLockScreenAction' ? 'Lock Screen Now' : catalogItem?.name || m_classType,
                 schemaDriven: catalogItem?.schemaDriven || false,
-                m_SIGUID: Number.isFinite(m_SIGUID) ? m_SIGUID : Math.floor(Math.random() * 9000000000000000000) + 1000000000000000000,
+                m_SIGUID: Number.isFinite(m_SIGUID) ? m_SIGUID : 0,
                 params
             };
         });
@@ -3608,13 +4475,17 @@
             for (const file of files) {
                 const data = JSON.parse(await file.text());
                 if (Array.isArray(data?.macros) && typeof data.categoryName === 'string') {
+                    const initialMacroCount = data.macros.length;
+                    data.macros = data.macros.filter(macro => !isEmptyHideAllScenesMacro(macro));
+                    const removedPlaceholder = data.macros.length !== initialMacroCount;
                     data.macros.forEach((macro, index) => validateRawMacro(macro, `${file.name}, macro ${index + 1}`));
                     incoming.push({
                         id: `document-${nextDocumentId++}`,
                         kind: 'category',
                         fileName: file.name,
                         data,
-                        selectedMacroIndex: 0
+                        selectedMacroIndex: 0,
+                        removedEmptyHideAllScenes: removedPlaceholder
                     });
                 } else if (data?.macro && typeof data.macro === 'object' && !Array.isArray(data.macro)) {
                     validateRawMacro(data.macro, file.name);
@@ -3634,7 +4505,12 @@
                 const first = incoming[0];
                 selectDocumentMacro(first.id, 0);
             }
-            if (incoming.length > 1) showToast(`Opened ${incoming.length} MacroDroid files.`);
+            const removedPlaceholderCount = incoming.filter(entry => entry.removedEmptyHideAllScenes).length;
+            if (removedPlaceholderCount) {
+                showToast('Opened category without its empty "Hide All Scenes" placeholder.');
+            } else if (incoming.length > 1) {
+                showToast(`Opened ${incoming.length} MacroDroid files.`);
+            }
         } catch (error) {
             showToast(`Unable to open MacroDroid files: ${error.message}`, 'error');
         } finally {
